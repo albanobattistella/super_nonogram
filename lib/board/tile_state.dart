@@ -1,5 +1,1 @@
-enum TileState {
-  empty,
-  selected,
-  crossed;
-}
+enum TileState { empty, selected, crossed }

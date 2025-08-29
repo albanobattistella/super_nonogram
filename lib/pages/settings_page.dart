@@ -20,27 +20,19 @@ class _SettingsPageState extends State<SettingsPage> {
     final iconTheme = IconTheme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(t.settings.settings),
-      ),
+      appBar: AppBar(title: Text(t.settings.settings)),
       body: DefaultTextStyle.merge(
-        style: TextStyle(
-          color: colorScheme.onSurface,
-        ),
+        style: TextStyle(color: colorScheme.onSurface),
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: 600,
-            ),
+            constraints: const BoxConstraints(maxWidth: 600),
             child: ListView(
               children: [
                 if (AdState.adsSupported) ...[
                   // ad banner
                   const Padding(
                     padding: EdgeInsets.all(32),
-                    child: BannerAdWidget(
-                      adSize: AdSize.mediumRectangle,
-                    ),
+                    child: BannerAdWidget(adSize: AdSize.mediumRectangle),
                   ),
                   const Divider(),
 
@@ -49,9 +41,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     onTap: AdState.showConsentForm,
                     children: [
                       const FaIcon(FontAwesomeIcons.rectangleAd),
-                      Text(
-                        t.settings.configureAdsConsent,
-                      ),
+                      Text(t.settings.configureAdsConsent),
                     ],
                   ),
                   const Divider(),
@@ -66,13 +56,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   children: [
                     Text(
                       'Aa',
-                      style: TextStyle(
-                        fontSize: iconTheme.size ?? 24,
-                      ),
+                      style: TextStyle(fontSize: iconTheme.size ?? 24),
                     ),
-                    Text(
-                      t.settings.hyperlegibleFont,
-                    ),
+                    Text(t.settings.hyperlegibleFont),
                     Switch(
                       value: stows.hyperlegibleFont.value,
                       onChanged: (_) => setState(() {
@@ -88,9 +74,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   // ad banner
                   const Padding(
                     padding: EdgeInsets.all(32),
-                    child: BannerAdWidget(
-                      adSize: AdSize.mediumRectangle,
-                    ),
+                    child: BannerAdWidget(adSize: AdSize.mediumRectangle),
                   ),
                   const Divider(),
                 ],
@@ -105,14 +89,10 @@ class _SettingsPageState extends State<SettingsPage> {
                   },
                   children: [
                     const FaIcon(FontAwesomeIcons.info),
-                    Text(
-                      t.title.appName,
-                    ),
+                    Text(t.title.appName),
                     Text(
                       t.settings.about,
-                      style: const TextStyle(
-                        fontSize: 12,
-                      ),
+                      style: const TextStyle(fontSize: 12),
                     ),
                   ],
                 ),

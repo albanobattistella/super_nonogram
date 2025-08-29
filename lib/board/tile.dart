@@ -3,10 +3,7 @@ import 'package:super_nonogram/board/board.dart';
 import 'package:super_nonogram/board/tile_state.dart';
 
 class Tile extends StatelessWidget {
-  const Tile({
-    super.key,
-    required this.tileState,
-  });
+  const Tile({super.key, required this.tileState});
 
   final TileState tileState;
 

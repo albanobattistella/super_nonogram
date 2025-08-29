@@ -51,10 +51,7 @@ class _AnimatedAppIconState extends State<AnimatedAppIcon>
           animation: _animation,
           builder: (context, child) {
             final scale = _controller.isAnimating ? _animation.value : 1.0;
-            return Transform.scale(
-              scale: scale,
-              child: child,
-            );
+            return Transform.scale(scale: scale, child: child);
           },
           child: const Image(
             image: AssetImage('assets/icon/resized/icon-512x512.png'),

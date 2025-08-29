@@ -11,10 +11,7 @@ abstract class LevelToBoard {
 
     final BoardState board = List.generate(
       size,
-      (_) => List.generate(
-        size,
-        (_) => ValueNotifier(TileState.empty),
-      ),
+      (_) => List.generate(size, (_) => ValueNotifier(TileState.empty)),
     );
 
     final r = Random(level);

@@ -4,11 +4,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 
 class SettingsItem extends StatefulWidget {
-  const SettingsItem({
-    super.key,
-    required this.onTap,
-    required this.children,
-  });
+  const SettingsItem({super.key, required this.onTap, required this.children});
 
   final VoidCallback onTap;
   final List<Widget> children;
@@ -58,16 +54,11 @@ class _SettingsItemState extends State<SettingsItem>
 
     return Center(
       child: Theme(
-        data: Theme.of(context).copyWith(
-          colorScheme: colorScheme,
-        ),
+        data: Theme.of(context).copyWith(colorScheme: colorScheme),
         child: GestureDetector(
           onTap: widget.onTap,
           child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 64,
-              vertical: 32,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 64, vertical: 32),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: widget.children,

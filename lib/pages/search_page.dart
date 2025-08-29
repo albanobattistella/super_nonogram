@@ -38,8 +38,9 @@ class _SearchPageState extends State<SearchPage> {
       final fileJson = '/$baseFilename.json';
 
       if (!await FileManager.doesFileExist(fileNgb)) {
-        final (info, srcImage, board) =
-            await PixabayApi.getBoardFromSearch(query);
+        final (info, srcImage, board) = await PixabayApi.getBoardFromSearch(
+          query,
+        );
         if (info == null || srcImage == null || board == null) {
           _failedSearch = true;
           return;
@@ -66,9 +67,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(t.title.appName),
-      ),
+      appBar: AppBar(title: Text(t.title.appName)),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
@@ -209,8 +208,9 @@ class _PreviousPuzzlesState extends State<PreviousPuzzles> {
                         padding: const EdgeInsets.all(_imagePadding),
                         child: AspectRatio(
                           aspectRatio: 1,
-                          child:
-                              Image(image: FileManager.getPuzzleImage(puzzle)),
+                          child: Image(
+                            image: FileManager.getPuzzleImage(puzzle),
+                          ),
                         ),
                       ),
                       Text(

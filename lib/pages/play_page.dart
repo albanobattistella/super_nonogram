@@ -22,13 +22,12 @@ import 'package:super_nonogram/i18n/strings.g.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PlayPage extends StatefulWidget {
-  const PlayPage({
-    super.key,
-    required this.query,
-    required this.level,
-  })  : assert((query != null) ^ (level != null),
-            'Either query or level must be provided'),
-        assert(level == null || level > 0, 'Level must be greater than 0');
+  const PlayPage({super.key, required this.query, required this.level})
+    : assert(
+        (query != null) ^ (level != null),
+        'Either query or level must be provided',
+      ),
+      assert(level == null || level > 0, 'Level must be greater than 0');
 
   final String? query;
   final int? level;
@@ -53,13 +52,16 @@ class _PlayPageState extends State<PlayPage> {
   void loadBoard() async {
     if (widget.query != null) {
       final encodedQuery = Uri.encodeComponent(widget.query!);
-      final ngbContents =
-          await FileManager.readFile<String>('/$encodedQuery.ngb');
-      final infoJson =
-          await FileManager.readFile<String>('/$encodedQuery.json');
+      final ngbContents = await FileManager.readFile<String>(
+        '/$encodedQuery.ngb',
+      );
+      final infoJson = await FileManager.readFile<String>(
+        '/$encodedQuery.json',
+      );
       imageBytes = await FileManager.readFile<Uint8List>('/$encodedQuery.png');
-      imageInfo =
-          infoJson == null ? null : PixabayImage.fromJson(jsonDecode(infoJson));
+      imageInfo = infoJson == null
+          ? null
+          : PixabayImage.fromJson(jsonDecode(infoJson));
       answerBoard = Ngb.readNgb(ngbContents!);
       if (mounted) setState(() {});
     } else if (widget.level != null) {
@@ -85,9 +87,7 @@ class _PlayPageState extends State<PlayPage> {
             onALevel
                 ? t.play.levelCompleted(n: widget.level!)
                 : t.play.puzzleCompleted,
-            style: TextStyle(
-              color: colorScheme.onSurface,
-            ),
+            style: TextStyle(color: colorScheme.onSurface),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -95,24 +95,18 @@ class _PlayPageState extends State<PlayPage> {
               if (imageBytes != null) ...[
                 ConstrainedBox(
                   constraints: const BoxConstraints(maxHeight: 300),
-                  child: Image(
-                    image: MemoryImage(imageBytes!),
-                  ),
+                  child: Image(image: MemoryImage(imageBytes!)),
                 ),
                 const SizedBox(height: 8),
                 if (imageInfo != null)
                   RichText(
                     text: TextSpan(
-                      style: TextStyle(
-                        color: colorScheme.onSurface,
-                      ),
+                      style: TextStyle(color: colorScheme.onSurface),
                       children: [
                         t.play.imageAttribution(
                           author: TextSpan(
                             text: imageInfo!.authorName,
-                            style: TextStyle(
-                              color: colorScheme.primary,
-                            ),
+                            style: TextStyle(color: colorScheme.primary),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 launchUrl(Uri.parse(imageInfo!.authorPageUrl));
@@ -120,9 +114,7 @@ class _PlayPageState extends State<PlayPage> {
                           ),
                           pixabay: TextSpan(
                             text: 'Pixabay',
-                            style: TextStyle(
-                              color: colorScheme.primary,
-                            ),
+                            style: TextStyle(color: colorScheme.primary),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
                                 launchUrl(Uri.parse(imageInfo!.pageUrl));
@@ -159,7 +151,8 @@ class _PlayPageState extends State<PlayPage> {
                 onPressed: () {
                   stows.currentLevel.value = widget.level! + 1;
                   context.pushReplacement(
-                      '/play?level=${stows.currentLevel.value}');
+                    '/play?level=${stows.currentLevel.value}',
+                  );
                 },
                 child: Text(t.play.nextLevel),
               ),
@@ -173,115 +166,121 @@ class _PlayPageState extends State<PlayPage> {
   Widget build(BuildContext context) {
     final parentTheme = Theme.of(context);
     return FutureBuilder(
-        future: imageBytes == null
-            ? null
-            : ColorScheme.fromImageProvider(
-                provider: MemoryImage(imageBytes!),
-                brightness: parentTheme.brightness,
-              ),
-        builder: (context, snapshot) {
-          final colorScheme = snapshot.data ?? parentTheme.colorScheme;
-          return Theme(
-            data: parentTheme.copyWith(
-              colorScheme: colorScheme,
+      future: imageBytes == null
+          ? null
+          : ColorScheme.fromImageProvider(
+              provider: MemoryImage(imageBytes!),
+              brightness: parentTheme.brightness,
             ),
-            child: Scaffold(
-              appBar: AppBar(
-                title: Text(t.title.appName),
-                // Display level selector
-                bottom: widget.level == null
-                    ? null
-                    : PreferredSize(
-                        preferredSize: const Size.fromHeight(48),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (widget.level! > 1)
-                              IconButton(
-                                onPressed: () {
-                                  stows.currentLevel.value = widget.level! - 1;
-                                  context.pushReplacement(
-                                      '/play?level=${stows.currentLevel.value}');
-                                },
-                                icon: const Icon(Icons.arrow_left),
-                              ),
-                            Text(
-                              t.play.level(n: widget.level!),
-                              style: TextStyle(
-                                fontSize: 24,
-                                color: colorScheme.onSurface,
-                              ),
-                            ),
+      builder: (context, snapshot) {
+        final colorScheme = snapshot.data ?? parentTheme.colorScheme;
+        return Theme(
+          data: parentTheme.copyWith(colorScheme: colorScheme),
+          child: Scaffold(
+            appBar: AppBar(
+              title: Text(t.title.appName),
+              // Display level selector
+              bottom: widget.level == null
+                  ? null
+                  : PreferredSize(
+                      preferredSize: const Size.fromHeight(48),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (widget.level! > 1)
                             IconButton(
                               onPressed: () {
-                                stows.currentLevel.value = widget.level! + 1;
+                                stows.currentLevel.value = widget.level! - 1;
                                 context.pushReplacement(
-                                    '/play?level=${stows.currentLevel.value}');
+                                  '/play?level=${stows.currentLevel.value}',
+                                );
                               },
-                              icon: const Icon(Icons.arrow_right),
+                              icon: const Icon(Icons.arrow_left),
                             ),
-                          ],
-                        ),
-                      ),
-              ),
-              body: Column(
-                children: [
-                  Expanded(
-                    child: Center(
-                      child: answerBoard == null
-                          ? const CircularProgressIndicator()
-                          : Board(
-                              answerBoard: answerBoard!,
-                              srcImage: imageBytes,
-                              onSolved: onSolved,
-                              currentTileAction: currentTileAction,
+                          Text(
+                            t.play.level(n: widget.level!),
+                            style: TextStyle(
+                              fontSize: 24,
+                              color: colorScheme.onSurface,
                             ),
-                    ),
-                  ),
-                  SafeArea(
-                    child: Toolbar(
-                      currentTileAction: currentTileAction,
-                      setTileAction: (tileAction) => setState(() {
-                        currentTileAction = tileAction;
-                      }),
-                    ),
-                  ),
-                  if (AdState.adsSupported)
-                    const SafeArea(
-                      child: BannerAdWidget(
-                        adSize: AdSize.largeBanner,
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              stows.currentLevel.value = widget.level! + 1;
+                              context.pushReplacement(
+                                '/play?level=${stows.currentLevel.value}',
+                              );
+                            },
+                            icon: const Icon(Icons.arrow_right),
+                          ),
+                        ],
                       ),
                     ),
-                ],
-              ),
             ),
-          );
-        });
+            body: Column(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: answerBoard == null
+                        ? const CircularProgressIndicator()
+                        : Board(
+                            answerBoard: answerBoard!,
+                            srcImage: imageBytes,
+                            onSolved: onSolved,
+                            currentTileAction: currentTileAction,
+                          ),
+                  ),
+                ),
+                SafeArea(
+                  child: Toolbar(
+                    currentTileAction: currentTileAction,
+                    setTileAction: (tileAction) => setState(() {
+                      currentTileAction = tileAction;
+                    }),
+                  ),
+                ),
+                if (AdState.adsSupported)
+                  const SafeArea(
+                    child: BannerAdWidget(adSize: AdSize.largeBanner),
+                  ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   static Future recordLevelCompleteAchievement(int level) async {
     /// The largest tier that the user has completed
-    final completedTier =
-        androidAchievements.levels.tiers.lastWhere((tier) => level >= tier);
+    final completedTier = androidAchievements.levels.tiers.lastWhere(
+      (tier) => level >= tier,
+    );
     // Unlock the achievement for the completed tier first
     // because of a bug on Android where subsequent achievements aren't recorded
-    await runAfterGamesSignIn(() => GamesServices.unlock(
-            achievement: Achievement(
+    await runAfterGamesSignIn(
+      () => GamesServices.unlock(
+        achievement: Achievement(
           androidID: androidAchievements.levels[completedTier],
           iOSID: iosAchievements.levels[completedTier],
           percentComplete: 100,
           steps: completedTier,
-        )));
+        ),
+      ),
+    );
 
     for (int tier in androidAchievements.levels.tiers) {
       if (tier == completedTier) continue;
-      await runAfterGamesSignIn(() => GamesServices.unlock(
-              achievement: Achievement(
+      await runAfterGamesSignIn(
+        () => GamesServices.unlock(
+          achievement: Achievement(
             androidID: androidAchievements.levels[tier],
             iOSID: iosAchievements.levels[tier],
             percentComplete: min(100, level / tier * 100),
             steps: level,
-          )));
+          ),
+        ),
+      );
     }
   }
 }

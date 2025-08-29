@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:super_nonogram/api/file_manager.dart';
 
 // Method signature for _loadAsync decode callbacks.
-typedef _SimpleDecoderCallback = Future<ui.Codec> Function(
-    ui.ImmutableBuffer buffer);
+typedef _SimpleDecoderCallback =
+    Future<ui.Codec> Function(ui.ImmutableBuffer buffer);
 
 /// A [FileImage] that uses `FileManager.readFile(file.path)`
 /// instead of `file.readAsBytes()`,

@@ -13,35 +13,29 @@ import 'package:super_nonogram/pages/search_page.dart';
 import 'package:super_nonogram/pages/settings_page.dart';
 import 'package:super_nonogram/pages/title_page.dart';
 
-final _router = GoRouter(routes: [
-  GoRoute(
-    path: '/',
-    builder: (context, state) => const TitlePage(),
-  ),
-  GoRoute(
-    path: '/search',
-    builder: (context, state) => const SearchPage(),
-  ),
-  GoRoute(
-    path: '/play',
-    builder: (context, state) => PlayPage(
-      query: state.uri.queryParameters['query'],
-      level: int.tryParse(state.uri.queryParameters['level'] ?? ''),
+final _router = GoRouter(
+  routes: [
+    GoRoute(path: '/', builder: (context, state) => const TitlePage()),
+    GoRoute(path: '/search', builder: (context, state) => const SearchPage()),
+    GoRoute(
+      path: '/play',
+      builder: (context, state) => PlayPage(
+        query: state.uri.queryParameters['query'],
+        level: int.tryParse(state.uri.queryParameters['level'] ?? ''),
+      ),
     ),
-  ),
-  GoRoute(
-    path: '/settings',
-    builder: (context, state) => const SettingsPage(),
-  ),
-]);
+    GoRoute(
+      path: '/settings',
+      builder: (context, state) => const SettingsPage(),
+    ),
+  ],
+);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   AdState.init();
 
-  await Future.wait([
-    stows.currentLevel.waitUntilRead(),
-  ]);
+  await Future.wait([stows.currentLevel.waitUntilRead()]);
 
   _addLicenses();
 
@@ -52,8 +46,9 @@ void main() async {
 
 void _addLicenses() {
   LicenseRegistry.addLicense(() async* {
-    final license =
-        await rootBundle.loadString('assets/google_fonts/Righteous/OFL.txt');
+    final license = await rootBundle.loadString(
+      'assets/google_fonts/Righteous/OFL.txt',
+    );
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
   });
 }

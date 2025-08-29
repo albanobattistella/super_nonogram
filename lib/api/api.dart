@@ -12,7 +12,8 @@ abstract class PixabayApi {
   static const baseUrl = 'https://pixabay.com/api/';
 
   static Future<PixabaySearchResults> search(String query) async {
-    final url = '$baseUrl'
+    final url =
+        '$baseUrl'
         '?key=$apiKey'
         '&q=${Uri.encodeQueryComponent(query)}'
         '&colors=transparent'
@@ -27,7 +28,8 @@ abstract class PixabayApi {
   }
 
   static Future<(PixabayImage?, Uint8List?, BoardState?)> getBoardFromSearch(
-      String query) async {
+    String query,
+  ) async {
     final searchResults = await search(query);
     for (final image in searchResults.images) {
       if (kDebugMode) {
@@ -71,11 +73,7 @@ class PixabaySearchResults {
   }
 
   Map<String, dynamic> toJson() {
-    return {
-      'total': total,
-      'totalHits': totalHits,
-      'images': images,
-    };
+    return {'total': total, 'totalHits': totalHits, 'images': images};
   }
 }
 
@@ -92,7 +90,8 @@ class PixabayImage {
   final int authorId;
   final String authorName;
   final String authorImageUrl;
-  String get authorPageUrl => 'https://pixabay.com/users/'
+  String get authorPageUrl =>
+      'https://pixabay.com/users/'
       '${Uri.encodeComponent(authorName.toLowerCase())}-$authorId/'
       '?utm_source=link-attribution&utm_medium=referral'
       '&utm_campaign=image&utm_content=$id';

@@ -10,10 +10,10 @@ void main() {
     test('with one label group', () {
       const labels = BoardLabels.fromLists(
         columns: [
-          [1]
+          [1],
         ],
         rows: [
-          [0]
+          [0],
         ],
       );
       final height = BoardWidgetState.getColumnLabelsHeight(labels);
@@ -23,10 +23,10 @@ void main() {
     test('with two label groups', () {
       const labels = BoardLabels.fromLists(
         columns: [
-          [1, 1]
+          [1, 1],
         ],
         rows: [
-          [0]
+          [0],
         ],
       );
       final height = BoardWidgetState.getColumnLabelsHeight(labels);
@@ -36,34 +36,36 @@ void main() {
     test('with 4 label groups', () {
       const labels = BoardLabels.fromLists(
         columns: [
-          [3, 1, 1, 3]
+          [3, 1, 1, 3],
         ],
         rows: [
-          [0]
+          [0],
         ],
       );
       final height = BoardWidgetState.getColumnLabelsHeight(labels);
       // Addresses https://github.com/adil192/super_nonogram/issues/3
-      expect(height,
-          moreOrLessEquals(Board.tileSize, epsilon: Board.tileSize * 0.01),
-          reason: 'Groups of 4 should take about 1 tile size');
+      expect(
+        height,
+        moreOrLessEquals(Board.tileSize, epsilon: Board.tileSize * 0.01),
+        reason: 'Groups of 4 should take about 1 tile size',
+      );
     });
 
     test('with different label group lengths', () {
       const labels = BoardLabels.fromLists(
         columns: [
           [1, 1, 1],
-          [1, 1]
+          [1, 1],
         ],
         rows: [
-          [0]
+          [0],
         ],
       );
       final height = BoardWidgetState.getColumnLabelsHeight(labels);
       expect(
-          height,
-          heightOfOneLine * 3 +
-              Board.tileSpacing / 2); // longest group is of length 3
+        height,
+        heightOfOneLine * 3 + Board.tileSpacing / 2,
+      ); // longest group is of length 3
     });
   });
 }

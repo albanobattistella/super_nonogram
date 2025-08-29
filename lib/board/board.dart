@@ -40,10 +40,14 @@ class BoardWidgetState extends State<Board> {
 
   late final int width = widget.answerBoard[0].length;
   late final int height = widget.answerBoard.length;
-  late final BoardLabels answer =
-      BoardLabels.fromBoardState(widget.answerBoard, width, height);
-  late ValueNotifier<BoardLabels> currentAnswers =
-      ValueNotifier(BoardLabels.fromBoardState(board, width, height));
+  late final BoardLabels answer = BoardLabels.fromBoardState(
+    widget.answerBoard,
+    width,
+    height,
+  );
+  late ValueNotifier<BoardLabels> currentAnswers = ValueNotifier(
+    BoardLabels.fromBoardState(board, width, height),
+  );
   bool get isSolved => currentAnswers.value == answer;
 
   /// Whether secondary input is currently active
@@ -56,17 +60,11 @@ class BoardWidgetState extends State<Board> {
 
   late final BoardState board = List.generate(
     height,
-    (_) => List.generate(
-      width,
-      (_) => ValueNotifier(TileState.empty),
-    ),
+    (_) => List.generate(width, (_) => ValueNotifier(TileState.empty)),
   );
   late final BoardState boardBackup = List.generate(
     height,
-    (_) => List.generate(
-      width,
-      (_) => ValueNotifier(TileState.empty),
-    ),
+    (_) => List.generate(width, (_) => ValueNotifier(TileState.empty)),
   );
 
   Coordinate panStartCoordinate = (x: 0, y: 0);
@@ -108,23 +106,28 @@ class BoardWidgetState extends State<Board> {
       tapHoldTimer?.cancel();
     }
 
-    final TileState targetTileState =
-        secondaryInput ? TileState.crossed : widget.currentTileAction;
+    final TileState targetTileState = secondaryInput
+        ? TileState.crossed
+        : widget.currentTileAction;
 
     /// This tile is either in the same row or the same column as the pan start tile.
     bool inSameRow = y == panStartCoordinate.y;
 
     // Interpolate between the start and end coordinates.
     if (inSameRow) {
-      for (int i = min(x, panStartCoordinate.x);
-          i <= max(x, panStartCoordinate.x);
-          i++) {
+      for (
+        int i = min(x, panStartCoordinate.x);
+        i <= max(x, panStartCoordinate.x);
+        i++
+      ) {
         _updateTile(i, y, targetTileState);
       }
     } else {
-      for (int i = min(y, panStartCoordinate.y);
-          i <= max(y, panStartCoordinate.y);
-          i++) {
+      for (
+        int i = min(y, panStartCoordinate.y);
+        i <= max(y, panStartCoordinate.y);
+        i++
+      ) {
         _updateTile(x, i, targetTileState);
       }
     }
@@ -236,8 +239,9 @@ class BoardWidgetState extends State<Board> {
             child: InteractiveViewer(
               onInteractionStart: (details) {
                 isPanCancelled = false;
-                final (:x, :y) =
-                    getCoordinateOfPosition(details.localFocalPoint);
+                final (:x, :y) = getCoordinateOfPosition(
+                  details.localFocalPoint,
+                );
                 onPanStart(x, y);
                 panStartCoordinate = (x: x, y: y);
                 switch (getTileRelation(x, y)) {
@@ -252,8 +256,9 @@ class BoardWidgetState extends State<Board> {
               },
               onInteractionUpdate: (details) {
                 if (checkIfPanCancelled(details)) return;
-                final (:x, :y) =
-                    getCoordinateOfPosition(details.localFocalPoint);
+                final (:x, :y) = getCoordinateOfPosition(
+                  details.localFocalPoint,
+                );
                 if (getTileRelation(x, y) == TileRelation.valid) {
                   onPanUpdate(x, y);
                 }
@@ -281,10 +286,7 @@ class BoardWidgetState extends State<Board> {
                           top: Board.tileSize,
                           left: Board.tileSize,
                         ),
-                        child: Image.memory(
-                          widget.srcImage!,
-                          fit: BoxFit.fill,
-                        ),
+                        child: Image.memory(widget.srcImage!, fit: BoxFit.fill),
                       ),
                     ),
                 ],
@@ -304,8 +306,4 @@ class BoardWidgetState extends State<Board> {
 }
 
 @visibleForTesting
-enum TileRelation {
-  valid,
-  outOfBounds,
-  notInSameRowOrColumn,
-}
+enum TileRelation { valid, outOfBounds, notInSameRowOrColumn }

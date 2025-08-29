@@ -20,10 +20,7 @@ abstract class Ngb {
 
     final BoardState board = List.generate(
       height,
-      (_) => List.generate(
-        width,
-        (_) => ValueNotifier(TileState.empty),
-      ),
+      (_) => List.generate(width, (_) => ValueNotifier(TileState.empty)),
     );
 
     for (int y = 0; y < height; y++) {

@@ -12,10 +12,7 @@ void main() {
     test('empty board', () {
       final BoardState boardState = List.generate(
         height,
-        (_) => List.generate(
-          width,
-          (_) => ValueNotifier(TileState.empty),
-        ),
+        (_) => List.generate(width, (_) => ValueNotifier(TileState.empty)),
       );
 
       final labels = BoardLabels.fromBoardState(boardState, width, height);
@@ -31,10 +28,7 @@ void main() {
     test('full board', () {
       final BoardState boardState = List.generate(
         height,
-        (_) => List.generate(
-          width,
-          (_) => ValueNotifier(TileState.selected),
-        ),
+        (_) => List.generate(width, (_) => ValueNotifier(TileState.selected)),
       );
 
       final labels = BoardLabels.fromBoardState(boardState, width, height);
@@ -52,10 +46,7 @@ void main() {
     test('1 1 1', () {
       final BoardState boardState = List.generate(
         height,
-        (_) => List.generate(
-          width,
-          (_) => ValueNotifier(TileState.empty),
-        ),
+        (_) => List.generate(width, (_) => ValueNotifier(TileState.empty)),
       );
 
       for (int x = 0; x < width; ++x) {

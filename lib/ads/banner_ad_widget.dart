@@ -71,33 +71,24 @@ abstract class AdState {
 
   static void _checkForRequiredConsent() {
     final params = ConsentRequestParameters();
-    ConsentInformation.instance.requestConsentInfoUpdate(
-      params,
-      () async {
-        final status = await ConsentInformation.instance.getConsentStatus();
-        if (status != ConsentStatus.required) return;
-        if (await ConsentInformation.instance.isConsentFormAvailable()) {
-          showConsentForm();
-        }
-      },
-      (formError) {},
-    );
+    ConsentInformation.instance.requestConsentInfoUpdate(params, () async {
+      final status = await ConsentInformation.instance.getConsentStatus();
+      if (status != ConsentStatus.required) return;
+      if (await ConsentInformation.instance.isConsentFormAvailable()) {
+        showConsentForm();
+      }
+    }, (formError) {});
   }
 
   static void showConsentForm() {
-    ConsentForm.loadConsentForm(
-      (ConsentForm consentForm) async {
-        consentForm.show(
-          (formError) async {
-            if (formError != null) {
-              // Handle dismissal by reloading form
-              showConsentForm();
-            }
-          },
-        );
-      },
-      (formError) {},
-    );
+    ConsentForm.loadConsentForm((ConsentForm consentForm) async {
+      consentForm.show((formError) async {
+        if (formError != null) {
+          // Handle dismissal by reloading form
+          showConsentForm();
+        }
+      });
+    }, (formError) {});
   }
 
   static Future<BannerAd?> _createBannerAd(AdSize adSize) async {
@@ -131,10 +122,7 @@ abstract class AdState {
 }
 
 class BannerAdWidget extends StatefulWidget {
-  const BannerAdWidget({
-    super.key,
-    required this.adSize,
-  });
+  const BannerAdWidget({super.key, required this.adSize});
 
   final AdSize adSize;
 
@@ -167,9 +155,7 @@ class _BannerAdWidgetState extends State<BannerAdWidget>
     late final colorScheme = Theme.of(context).colorScheme;
 
     return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(16),
         child: FittedBox(

@@ -54,16 +54,11 @@ class TitlePage extends StatelessWidget {
               children: [
                 Text(
                   t.title.appName,
-                  style: TextStyle(
-                    fontSize: titleFontSize,
-                    color: fg,
-                  ),
+                  style: TextStyle(fontSize: titleFontSize, color: fg),
                 ),
                 const SizedBox(height: 64),
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    shape: buttonShape,
-                  ),
+                  style: ElevatedButton.styleFrom(shape: buttonShape),
                   onPressed: () {
                     context.push('/play?level=${stows.currentLevel.value}');
                   },
@@ -71,9 +66,7 @@ class TitlePage extends StatelessWidget {
                     padding: EdgeInsets.all(buttonFontSize / 2),
                     child: Text(
                       t.title.playLevels,
-                      style: TextStyle(
-                        fontSize: buttonFontSize,
-                      ),
+                      style: TextStyle(fontSize: buttonFontSize),
                     ),
                   ),
                 ),
@@ -87,17 +80,13 @@ class TitlePage extends StatelessWidget {
                   openElevation: 0,
                   closedBuilder: (context, action) {
                     return ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: buttonShape,
-                      ),
+                      style: ElevatedButton.styleFrom(shape: buttonShape),
                       onPressed: action,
                       child: Padding(
                         padding: EdgeInsets.all(buttonFontSize / 2),
                         child: Text(
                           t.title.playImages,
-                          style: TextStyle(
-                            fontSize: buttonFontSize,
-                          ),
+                          style: TextStyle(fontSize: buttonFontSize),
                         ),
                       ),
                     );
@@ -109,18 +98,15 @@ class TitlePage extends StatelessWidget {
                 if (GamesServicesHelper.osSupported) ...[
                   const SizedBox(height: 16),
                   ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: buttonShape,
-                    ),
+                    style: ElevatedButton.styleFrom(shape: buttonShape),
                     onPressed: () => runAfterGamesSignIn(
-                        () => GamesServices.showAchievements()),
+                      () => GamesServices.showAchievements(),
+                    ),
                     child: Padding(
                       padding: EdgeInsets.all(buttonFontSize / 2),
                       child: Text(
                         t.title.achievements,
-                        style: TextStyle(
-                          fontSize: buttonFontSize,
-                        ),
+                        style: TextStyle(fontSize: buttonFontSize),
                       ),
                     ),
                   ),
@@ -135,17 +121,13 @@ class TitlePage extends StatelessWidget {
                   openElevation: 0,
                   closedBuilder: (context, action) {
                     return ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        shape: buttonShape,
-                      ),
+                      style: ElevatedButton.styleFrom(shape: buttonShape),
                       onPressed: action,
                       child: Padding(
                         padding: EdgeInsets.all(buttonFontSize / 2),
                         child: Text(
                           t.settings.settings,
-                          style: TextStyle(
-                            fontSize: buttonFontSize,
-                          ),
+                          style: TextStyle(fontSize: buttonFontSize),
                         ),
                       ),
                     );

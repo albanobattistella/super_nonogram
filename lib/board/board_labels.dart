@@ -28,12 +28,12 @@ class BoardLabels {
   String labelRow(int y) => rows[y].join(' ');
 
   @visibleForTesting
-  const BoardLabels.fromLists({
-    required this.columns,
-    required this.rows,
-  });
+  const BoardLabels.fromLists({required this.columns, required this.rows});
   factory BoardLabels.fromBoardState(
-      BoardState boardState, int width, int height) {
+    BoardState boardState,
+    int width,
+    int height,
+  ) {
     final List<List<int>> columns = List.generate(width, (_) => [0]);
     final List<List<int>> rows = List.generate(height, (_) => [0]);
 
@@ -63,8 +63,9 @@ class BoardLabels {
       columns: columns
           .map((column) => column.where((group) => group != 0).toList())
           .toList(),
-      rows:
-          rows.map((row) => row.where((group) => group != 0).toList()).toList(),
+      rows: rows
+          .map((row) => row.where((group) => group != 0).toList())
+          .toList(),
     );
   }
 
@@ -92,14 +93,20 @@ class BoardLabels {
   int get hashCode => Object.hash(columns, rows);
 
   static BoardLabelStatus statusOfRow(
-      int y, BoardLabels answer, BoardLabels currentAnswers) {
+    int y,
+    BoardLabels answer,
+    BoardLabels currentAnswers,
+  ) {
     final List<int> answerRow = answer.rows[y];
     final List<int> currentRow = currentAnswers.rows[y];
     return BoardLabelStatus.fromGroups(answerRow, currentRow);
   }
 
   static BoardLabelStatus statusOfColumn(
-      int x, BoardLabels answer, BoardLabels currentAnswers) {
+    int x,
+    BoardLabels answer,
+    BoardLabels currentAnswers,
+  ) {
     final List<int> answerColumn = answer.columns[x];
     final List<int> currentColumn = currentAnswers.columns[x];
     return BoardLabelStatus.fromGroups(answerColumn, currentColumn);
@@ -136,7 +143,8 @@ enum BoardLabelStatus {
       final answerSum = answer.isEmpty
           ? 0
           : answer.reduce(
-              (sum, group) => sum + group + 1); // +1 for space between groups
+              (sum, group) => sum + group + 1,
+            ); // +1 for space between groups
       final currentSum = current.reduce((sum, group) => sum + group + 1);
 
       if (currentSum > answerSum) {

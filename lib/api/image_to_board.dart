@@ -8,8 +8,10 @@ abstract class ImageToBoard {
 
   /// The first row and column of the resized image are ignored
   /// since they're always empty.
-  static Future<BoardState?> importFromBytes(Uint8List bytes,
-      [int width = 14]) async {
+  static Future<BoardState?> importFromBytes(
+    Uint8List bytes, [
+    int width = 14,
+  ]) async {
     var cmd = img.Command()
       ..decodeImage(bytes)
       ..copyResize(width: width + 1, interpolation: img.Interpolation.cubic);
@@ -19,10 +21,8 @@ abstract class ImageToBoard {
 
     final BoardState board = List.generate(
       image.height - 1,
-      (_) => List.generate(
-        image.width - 1,
-        (_) => ValueNotifier(TileState.empty),
-      ),
+      (_) =>
+          List.generate(image.width - 1, (_) => ValueNotifier(TileState.empty)),
     );
 
     int selectedTiles = 0;

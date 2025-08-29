@@ -34,9 +34,7 @@ class Toolbar extends StatelessWidget {
               child: SizedBox(
                 width: _iconSize,
                 height: _iconSize,
-                child: Tile(
-                  tileState: tileAction,
-                ),
+                child: Tile(tileState: tileAction),
               ),
             ),
           ),
