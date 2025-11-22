@@ -3,6 +3,7 @@
 ///
 // coverage:ignore-file
 // ignore_for_file: type=lint, unused_import
+// dart format off
 
 part of 'strings.g.dart';
 
@@ -133,9 +134,6 @@ class TranslationsSettingsEn {
 
 	/// en: 'Settings'
 	String get settings => 'Settings';
-
-	/// en: 'Configure ads consent'
-	String get configureAdsConsent => 'Configure ads consent';
 
 	/// en: 'Use Atkinson Hyperlegible font'
 	String get hyperlegibleFont => 'Use Atkinson Hyperlegible font';
