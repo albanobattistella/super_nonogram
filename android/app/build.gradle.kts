@@ -20,41 +20,53 @@ if (keystorePropertiesFile.exists()) {
 android {
     namespace = "com.adilhanney.super_nonogram"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973"
+    ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     defaultConfig {
         applicationId = "com.adilhanney.super_nonogram"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = 23
+        minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
 
-    signingConfigs {
-        create("release") {
-            keyAlias = keystoreProperties["keyAlias"] as String
-            keyPassword = keystoreProperties["keyPassword"] as String
-            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
-            storePassword = keystoreProperties["storePassword"] as String
+    if (keystorePropertiesFile.exists()) {
+        signingConfigs {
+            create("release") {
+                keyAlias = keystoreProperties["keyAlias"] as String?
+                keyPassword = keystoreProperties["keyPassword"] as String?
+                storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+                storePassword = keystoreProperties["storePassword"] as String?
+            }
         }
-    }
-    buildTypes {
-        release {
-            signingConfig = signingConfigs.getByName("release")
+
+        buildTypes {
+            debug {
+                signingConfig = signingConfigs.getByName("release")
+            }
+            release {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
-        debug {
-            signingConfig = signingConfigs.getByName("release")
+    } else {
+        buildTypes {
+            debug {
+                signingConfig = signingConfigs.getByName("debug")
+            }
+            release {
+                signingConfig = signingConfigs.getByName("debug")
+            }
         }
     }
 }
