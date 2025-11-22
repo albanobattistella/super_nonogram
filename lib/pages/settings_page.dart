@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:super_nonogram/ads/banner_ad_widget.dart';
 import 'package:super_nonogram/data/stows.dart';
 import 'package:super_nonogram/i18n/strings.g.dart';
 import 'package:super_nonogram/settings/animated_app_icon.dart';
@@ -28,25 +27,6 @@ class _SettingsPageState extends State<SettingsPage> {
             constraints: const BoxConstraints(maxWidth: 600),
             child: ListView(
               children: [
-                if (AdState.adsSupported) ...[
-                  // ad banner
-                  const Padding(
-                    padding: EdgeInsets.all(32),
-                    child: BannerAdWidget(adSize: AdSize.mediumRectangle),
-                  ),
-                  const Divider(),
-
-                  // ad consent
-                  SettingsItem(
-                    onTap: AdState.showConsentForm,
-                    children: [
-                      const FaIcon(FontAwesomeIcons.rectangleAd),
-                      Text(t.settings.configureAdsConsent),
-                    ],
-                  ),
-                  const Divider(),
-                ],
-
                 // hyperlegible font
                 SettingsItem(
                   onTap: () => setState(() {
@@ -69,15 +49,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   ],
                 ),
                 const Divider(),
-
-                if (AdState.adsSupported) ...[
-                  // ad banner
-                  const Padding(
-                    padding: EdgeInsets.all(32),
-                    child: BannerAdWidget(adSize: AdSize.mediumRectangle),
-                  ),
-                  const Divider(),
-                ],
 
                 SettingsItem(
                   onTap: () {

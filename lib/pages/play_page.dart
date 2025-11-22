@@ -7,7 +7,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:games_services/games_services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:super_nonogram/ads/banner_ad_widget.dart';
 import 'package:super_nonogram/api/api.dart';
 import 'package:super_nonogram/api/file_manager.dart';
 import 'package:super_nonogram/api/level_to_board.dart';
@@ -239,10 +238,6 @@ class _PlayPageState extends State<PlayPage> {
                     }),
                   ),
                 ),
-                if (AdState.adsSupported)
-                  const SafeArea(
-                    child: BannerAdWidget(adSize: AdSize.largeBanner),
-                  ),
               ],
             ),
           ),
