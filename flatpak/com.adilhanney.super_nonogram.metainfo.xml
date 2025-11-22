@@ -78,6 +78,13 @@
     </screenshots>
 
     <releases>
+        <release version="0.8.0" type="development" date="2025-11-22">
+            <description>
+                <ul>
+                    <li>Maintenance update</li>
+                </ul>
+            </description>
+        </release>
         <release version="0.7.9" type="development" date="2025-07-05">
             <description>
                 <ul>
