@@ -137,7 +137,7 @@ icons_launcher:
       enable: true
       image_path: "assets/icon/icon_ios.png"
     linux:
-      enable: true
+      enable: false
     windows:
       enable: true
     macos:
