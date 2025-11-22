@@ -6,32 +6,35 @@ on:
   push:
 
 jobs:
-  build:
+  tests:
+    name: Tests
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Setup cache
         uses: actions/cache@v4
         with:
           path: |
-            build
+            .dart_tool/
+            build/
+            linux/flutter/ephemeral/
+            macos/Flutter/ephemeral/
+            windows/flutter/ephemeral/
+            .flutter-plugins-dependencies
           key: ${{ runner.OS }}-super_nonogram-${{ hashFiles('**/pubspec.lock') }}-${{ hashFiles('**/*.dart') }}
           restore-keys: |
             ${{ runner.OS }}-super_nonogram-
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: adil192/setup-flutter-submodule@v1
         with:
-          channel: stable
-          cache: true
-          cache-key: 'flutter-:os:-:channel:-:version:-:arch:'
+          flutter-path: submodules/flutter
 
       - run: flutter pub get
 
       - name: Run tests
-        run: flutter test --reporter expanded --coverage
+        run: flutter test --coverage
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3

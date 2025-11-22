@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   push:
     tags:
-      - '**'
+      - "**"
 
 jobs:
   get-version:
@@ -16,7 +16,7 @@ jobs:
       buildNumber: ${{ steps.get_version.outputs.buildNumber }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Get version
         id: get_version
@@ -35,23 +35,30 @@ jobs:
     needs: get-version
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup cache
         uses: actions/cache@v4
         with:
           path: |
-            build
+            .dart_tool/
+            build/
+            linux/flutter/ephemeral/
+            macos/Flutter/ephemeral/
+            windows/flutter/ephemeral/
+            .flutter-plugins-dependencies
           key: ${{ runner.OS }}-super_nonogram-${{ hashFiles('**/pubspec.lock') }}-${{ hashFiles('**/*.dart') }}
           restore-keys: |
             ${{ runner.OS }}-super_nonogram-
 
+      - name: Remove dev dependencies
+        shell: bash
+        run: ./patches/remove_dev_dependencies.sh
+
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: adil192/setup-flutter-submodule@v1
         with:
-          channel: stable
-          cache: true
-          cache-key: 'flutter-:os:-:channel:-:version:-:arch:'
+          flutter-path: submodules/flutter
 
       - run: flutter pub get
 

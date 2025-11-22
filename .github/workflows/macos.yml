@@ -19,7 +19,7 @@ jobs:
       buildNumber: ${{ steps.get_version.outputs.buildNumber }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Get version
         id: get_version
@@ -43,23 +43,15 @@ jobs:
       APP_STORE_CERTIFICATE_KEY: ${{secrets.APP_STORE_CERTIFICATE_KEY}}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup cache
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            build
-          key: ${{ runner.OS }}-super_nonogram-${{ hashFiles('**/pubspec.lock') }}-${{ hashFiles('**/*.dart') }}
-          restore-keys: |
-            ${{ runner.OS }}-super_nonogram-
+        uses: actions/checkout@v5
+      
+      - name: Remove dev dependencies
+        run: ./patches/remove_dev_dependencies.sh
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: adil192/setup-flutter-submodule@v1
         with:
-          channel: stable
-          cache: true
-          cache-key: 'flutter-:os:-:channel:-:version:-:arch:'
+          flutter-path: submodules/flutter
 
       - name: Install Codemagic CLI Tools
         run: pipx install codemagic-cli-tools
@@ -74,17 +66,16 @@ jobs:
             --certificate-key=@env:APP_STORE_CERTIFICATE_KEY \
             --create
 
-          app-store-connect list-certificates \
+          app-store-connect certificates list \
             --type MAC_INSTALLER_DISTRIBUTION \
             --certificate-key=@env:APP_STORE_CERTIFICATE_KEY \
             --save
 
           keychain add-certificates
 
-          xcode-project use-profiles
+          xcode-project use-profiles --project macos/*.xcodeproj
 
       - run: flutter pub get
-      - run: find . -name "Podfile" -execdir pod install \;
 
       - name: Build for macOS
         run: |
