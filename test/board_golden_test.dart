@@ -10,12 +10,11 @@ void main() {
     for (final level in const [1, 10, 20, 50, 99]) {
       testGoldens('Level $level', (tester) async {
         final widget = ScreenshotApp(
-          device: GoldenScreenshotDevices.android.device,
-          child: PlayPage(level: level, query: null),
+          device: GoldenScreenshotDevices.androidPhone.device,
+          home: PlayPage(level: level, query: null),
         );
         await tester.pumpWidget(widget);
-        await tester.precacheImagesInWidgetTree();
-        await tester.loadFonts();
+        await tester.loadAssets();
         await tester.pumpAndSettle();
 
         await expectLater(
