@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_screenshot/golden_screenshot.dart';
 import 'package:super_nonogram/ads/banner_ad_widget.dart';
@@ -18,7 +19,7 @@ void main() {
         await tester.pumpAndSettle();
 
         await expectLater(
-          find.byType(PlayPage),
+          find.byType(MaterialApp),
           matchesGoldenFile('goldens/board_level_$level.png'),
         );
       });
