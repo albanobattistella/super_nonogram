@@ -11,6 +11,7 @@ import 'package:super_nonogram/pages/play_page.dart';
 import 'package:super_nonogram/pages/search_page.dart';
 import 'package:super_nonogram/pages/settings_page.dart';
 import 'package:super_nonogram/pages/title_page.dart';
+import 'package:super_nonogram/theme/theme.dart';
 
 final _router = GoRouter(
   routes: [
@@ -32,6 +33,7 @@ final _router = GoRouter(
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Stows.isVolatile = false;
 
   await Future.wait([stows.currentLevel.waitUntilRead()]);
 
@@ -79,34 +81,17 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) {
-        lightDynamic ??= ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-          brightness: Brightness.light,
-        );
-        darkDynamic ??= ColorScheme.fromSeed(
-          seedColor: Colors.deepPurple,
-          brightness: Brightness.dark,
-        );
-
-        final textTheme = stows.hyperlegibleFont.value
-            ? GoogleFonts.atkinsonHyperlegibleTextTheme()
-            : GoogleFonts.righteousTextTheme();
-
         return MaterialApp.router(
           key: _appKey,
           title: 'Super Nonogram',
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(
-            useMaterial3: true,
+          theme: SuperNonogramTheme.createTheme(
+            brightness: Brightness.light,
             colorScheme: lightDynamic,
-            textTheme: textTheme,
-            scaffoldBackgroundColor: lightDynamic.surface,
           ),
-          darkTheme: ThemeData(
-            useMaterial3: true,
+          darkTheme: SuperNonogramTheme.createTheme(
+            brightness: Brightness.dark,
             colorScheme: darkDynamic,
-            textTheme: textTheme,
-            scaffoldBackgroundColor: darkDynamic.surface,
           ),
           routerConfig: _router,
         );
