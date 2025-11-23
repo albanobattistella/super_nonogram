@@ -15,8 +15,10 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
     final iconTheme = IconTheme.of(context);
+    final textTheme = theme.textTheme;
 
     return Scaffold(
       appBar: AppBar(title: Text(t.settings.settings)),
@@ -36,7 +38,9 @@ class _SettingsPageState extends State<SettingsPage> {
                   children: [
                     Text(
                       'Aa',
-                      style: TextStyle(fontSize: iconTheme.size ?? 24),
+                      style: textTheme.displaySmall?.copyWith(
+                        fontSize: iconTheme.size ?? 24,
+                      ),
                     ),
                     Text(t.settings.hyperlegibleFont),
                     Switch(
@@ -61,10 +65,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   children: [
                     const FaIcon(FontAwesomeIcons.info),
                     Text(t.title.appName),
-                    Text(
-                      t.settings.about,
-                      style: const TextStyle(fontSize: 12),
-                    ),
+                    Text(t.settings.about, style: textTheme.labelMedium),
                   ],
                 ),
                 const Divider(),

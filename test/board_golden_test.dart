@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_screenshot/golden_screenshot.dart';
 import 'package:super_nonogram/pages/play_page.dart';
+import 'package:super_nonogram/theme/theme.dart';
 
 void main() {
   group('Board goldens', () {
@@ -9,6 +10,10 @@ void main() {
       testGoldens('Level $level', (tester) async {
         final widget = ScreenshotApp(
           device: GoldenScreenshotDevices.androidPhone.device,
+          theme: SuperNonogramTheme.createTheme(
+            brightness: Brightness.light,
+            colorScheme: null,
+          ),
           home: PlayPage(level: level, query: null),
         );
         await tester.pumpWidget(widget);

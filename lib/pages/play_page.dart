@@ -86,7 +86,6 @@ class _PlayPageState extends State<PlayPage> {
             onALevel
                 ? t.play.levelCompleted(n: widget.level!)
                 : t.play.puzzleCompleted,
-            style: TextStyle(color: colorScheme.onSurface),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -164,6 +163,7 @@ class _PlayPageState extends State<PlayPage> {
   @override
   Widget build(BuildContext context) {
     final parentTheme = Theme.of(context);
+    final textTheme = parentTheme.textTheme;
     return FutureBuilder(
       future: imageBytes == null
           ? null
@@ -198,10 +198,7 @@ class _PlayPageState extends State<PlayPage> {
                             ),
                           Text(
                             t.play.level(n: widget.level!),
-                            style: TextStyle(
-                              fontSize: 24,
-                              color: colorScheme.onSurface,
-                            ),
+                            style: textTheme.titleLarge,
                           ),
                           IconButton(
                             onPressed: () {

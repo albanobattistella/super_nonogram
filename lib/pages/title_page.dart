@@ -15,25 +15,22 @@ class TitlePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
-    final mediaQuery = MediaQuery.of(context);
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final screenSize = MediaQuery.sizeOf(context);
 
-    final double titleFontSize;
-    final double buttonFontSize;
-    switch (mediaQuery.size.width) {
-      case < 400:
-        titleFontSize = 24;
-        buttonFontSize = 16;
-      case < 600:
-        titleFontSize = 36;
-        buttonFontSize = 24;
-      default:
-        titleFontSize = 48;
-        buttonFontSize = 32;
-    }
+    final double buttonFontSize = switch (screenSize.width) {
+      < 400 => 16,
+      < 600 => 24,
+      _ => 32,
+    };
 
     final buttonShape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(buttonFontSize * 2),
+    );
+    final elevatedButtonStyle = ElevatedButtonTheme.of(context).style!.copyWith(
+      shape: WidgetStatePropertyAll(buttonShape),
+      textStyle: WidgetStatePropertyAll(textTheme.titleLarge!),
     );
 
     return Scaffold(
@@ -41,32 +38,23 @@ class TitlePage extends StatelessWidget {
         child: SingleChildScrollView(
           padding: EdgeInsets.symmetric(
             vertical: 32,
-            horizontal: max((mediaQuery.size.width - 600) / 2, 16),
+            horizontal: max((screenSize.width - 600) / 2, 16),
           ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(
-                t.title.appName,
-                style: TextStyle(
-                  fontSize: titleFontSize,
-                  color: colorScheme.onSurface,
-                ),
-              ),
+              Text(t.title.appName, style: textTheme.displayMedium),
               const SizedBox(height: 64),
               ElevatedButton(
-                style: ElevatedButton.styleFrom(shape: buttonShape),
+                style: elevatedButtonStyle,
                 onPressed: () {
                   context.push('/play?level=${stows.currentLevel.value}');
                 },
                 child: Padding(
                   padding: EdgeInsets.all(buttonFontSize / 2),
-                  child: Text(
-                    t.title.playLevels,
-                    style: TextStyle(fontSize: buttonFontSize),
-                  ),
+                  child: Text(t.title.playLevels),
                 ),
               ),
               const SizedBox(height: 16),
@@ -79,14 +67,11 @@ class TitlePage extends StatelessWidget {
                 openElevation: 0,
                 closedBuilder: (context, action) {
                   return ElevatedButton(
-                    style: ElevatedButton.styleFrom(shape: buttonShape),
+                    style: elevatedButtonStyle,
                     onPressed: action,
                     child: Padding(
                       padding: EdgeInsets.all(buttonFontSize / 2),
-                      child: Text(
-                        t.title.playImages,
-                        style: TextStyle(fontSize: buttonFontSize),
-                      ),
+                      child: Text(t.title.playImages),
                     ),
                   );
                 },
@@ -97,16 +82,13 @@ class TitlePage extends StatelessWidget {
               if (GamesServicesHelper.osSupported) ...[
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  style: ElevatedButton.styleFrom(shape: buttonShape),
+                  style: elevatedButtonStyle,
                   onPressed: () => runAfterGamesSignIn(
                     () => GamesServices.showAchievements(),
                   ),
                   child: Padding(
                     padding: EdgeInsets.all(buttonFontSize / 2),
-                    child: Text(
-                      t.title.achievements,
-                      style: TextStyle(fontSize: buttonFontSize),
-                    ),
+                    child: Text(t.title.achievements),
                   ),
                 ),
               ],
@@ -120,14 +102,11 @@ class TitlePage extends StatelessWidget {
                 openElevation: 0,
                 closedBuilder: (context, action) {
                   return ElevatedButton(
-                    style: ElevatedButton.styleFrom(shape: buttonShape),
+                    style: elevatedButtonStyle,
                     onPressed: action,
                     child: Padding(
                       padding: EdgeInsets.all(buttonFontSize / 2),
-                      child: Text(
-                        t.settings.settings,
-                        style: TextStyle(fontSize: buttonFontSize),
-                      ),
+                      child: Text(t.settings.settings),
                     ),
                   );
                 },

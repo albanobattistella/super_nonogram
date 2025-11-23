@@ -65,7 +65,9 @@ class _SearchPageState extends State<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
+    final theme = Theme.of(context);
+    final textTheme = theme.textTheme;
+    final colorScheme = theme.colorScheme;
     return Scaffold(
       appBar: AppBar(title: Text(t.title.appName)),
       body: Center(
@@ -77,10 +79,7 @@ class _SearchPageState extends State<SearchPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Text(
-                  t.search.createNewPuzzle,
-                  style: TextStyle(color: colorScheme.onSurface, fontSize: 24),
-                ),
+                Text(t.search.createNewPuzzle, style: textTheme.headlineMedium),
                 const SizedBox(height: 8),
                 Form(
                   key: _formKey,
