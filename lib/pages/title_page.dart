@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:games_services/games_services.dart';
@@ -37,9 +39,14 @@ class TitlePage extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 32),
+          padding: EdgeInsets.symmetric(
+            vertical: 32,
+            horizontal: max((mediaQuery.size.width - 600) / 2, 16),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
                 t.title.appName,
