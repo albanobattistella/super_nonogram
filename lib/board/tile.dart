@@ -13,20 +13,29 @@ class TilePreview extends StatelessWidget {
     return SizedBox.square(
       dimension: tileSize,
       child: CustomPaint(
-        painter: TilePainter(tileState: tileState, colorScheme: colorScheme),
+        painter: TilePainter(
+          tileState: tileState,
+          colorScheme: colorScheme,
+          onOffSwitchLabels: MediaQuery.onOffSwitchLabelsOf(context),
+          highContrast: MediaQuery.highContrastOf(context),
+        ),
       ),
     );
   }
 }
 
 class TilePainter extends CustomPainter {
-  TilePainter({required this.tileState, required ColorScheme colorScheme})
-    : _tileColor = getTileColor(colorScheme),
-      _crossColor = getCrossColor(colorScheme);
+  TilePainter({
+    required this.tileState,
+    required this.colorScheme,
+    required this.onOffSwitchLabels,
+    required this.highContrast,
+  });
 
   final TileState tileState;
-  final Color _tileColor;
-  final Color _crossColor;
+  final ColorScheme colorScheme;
+  final bool onOffSwitchLabels;
+  final bool highContrast;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -34,8 +43,9 @@ class TilePainter extends CustomPainter {
       tileState,
       canvas: canvas,
       tileRect: Offset.zero & size,
-      tileColor: _tileColor,
-      crossColor: _crossColor,
+      colorScheme: colorScheme,
+      onOffSwitchLabels: onOffSwitchLabels,
+      highContrast: highContrast,
     );
   }
 
@@ -44,48 +54,72 @@ class TilePainter extends CustomPainter {
     return oldDelegate.tileState != tileState;
   }
 
-  static Color getTileColor(ColorScheme colorScheme) => colorScheme.primary;
-  static Color getCrossColor(ColorScheme colorScheme) =>
-      Color.lerp(colorScheme.surface, colorScheme.onSurface, 0.7)!;
-
   static void paintTile(
     TileState tileState, {
     required Canvas canvas,
     required Rect tileRect,
-    required Color tileColor,
-    required Color crossColor,
+    required ColorScheme colorScheme,
+    required bool onOffSwitchLabels,
+    required bool highContrast,
   }) {
     final tileRRect = RRect.fromRectXY(
       tileRect,
       tileRect.width * 0.2,
       tileRect.height * 0.2,
     );
-    final paint = Paint()
-      ..style = PaintingStyle.fill
-      ..color = switch (tileState) {
-        .selected => tileColor,
-        .crossed => tileColor.withValues(alpha: 0.05),
-        .empty => tileColor.withValues(alpha: 0.3),
-      };
-    canvas.drawRRect(tileRRect, paint);
+    canvas.drawRRect(
+      tileRRect,
+      Paint()
+        ..style = PaintingStyle.fill
+        ..color = switch (tileState) {
+          .selected => colorScheme.primary,
+          .crossed => colorScheme.primary.withValues(alpha: 0.05),
+          .empty => colorScheme.primary.withValues(alpha: 0.3),
+        },
+    );
+    if (highContrast) {
+      canvas.drawRRect(
+        tileRRect,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..color = colorScheme.onSurface
+          ..strokeWidth = 2.0,
+      );
+    }
 
     // Draw cross if crossed
+    late final iconPaint = Paint()
+      ..color = colorScheme.onSurface
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = tileRect.width * 0.04;
     if (tileState == TileState.crossed) {
-      final crossPaint = Paint()
-        ..color = crossColor
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = tileRect.width * 0.04;
       final t = 0.25;
       canvas.drawLine(
         Alignment(-t, -t).withinRect(tileRect),
         Alignment(t, t).withinRect(tileRect),
-        crossPaint,
+        iconPaint,
       );
       canvas.drawLine(
         Alignment(-t, t).withinRect(tileRect),
         Alignment(t, -t).withinRect(tileRect),
-        crossPaint,
+        iconPaint,
       );
+    } else if (tileState == TileState.selected && onOffSwitchLabels) {
+      iconPaint.color = colorScheme.onPrimary;
+      final path = Path()
+        ..moveTo(
+          tileRect.left + tileRect.width * 0.375,
+          tileRect.top + tileRect.height * 0.55,
+        )
+        ..lineTo(
+          tileRect.left + tileRect.width * 0.45,
+          tileRect.top + tileRect.height * 0.625,
+        )
+        ..lineTo(
+          tileRect.left + tileRect.width * 0.625,
+          tileRect.top + tileRect.height * 0.375,
+        );
+      canvas.drawPath(path, iconPaint);
     }
   }
 }

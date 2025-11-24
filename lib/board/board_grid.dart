@@ -361,6 +361,8 @@ class _UnlabelledBoardGridRenderObjectWidget extends LeafRenderObjectWidget {
       height: height,
       board: board,
       colorScheme: ColorScheme.of(context),
+      onOffSwitchLabels: MediaQuery.onOffSwitchLabelsOf(context),
+      highContrast: MediaQuery.highContrastOf(context),
     );
   }
 
@@ -373,7 +375,9 @@ class _UnlabelledBoardGridRenderObjectWidget extends LeafRenderObjectWidget {
       ..width = width
       ..height = height
       ..board = board
-      ..colorScheme = ColorScheme.of(context);
+      ..colorScheme = ColorScheme.of(context)
+      ..onOffSwitchLabels = MediaQuery.onOffSwitchLabelsOf(context)
+      ..highContrast = MediaQuery.highContrastOf(context);
   }
 }
 
@@ -383,10 +387,14 @@ class UnlabelledBoardGridRenderObject extends RenderBox {
     required int height,
     required BoardState board,
     required ColorScheme colorScheme,
+    required bool onOffSwitchLabels,
+    required bool highContrast,
   }) : _width = width,
        _height = height,
        _board = board,
-       _colorScheme = colorScheme {
+       _colorScheme = colorScheme,
+       _onOffSwitchLabels = onOffSwitchLabels,
+       _highContrast = highContrast {
     _listenToTiles();
   }
 
@@ -423,6 +431,22 @@ class UnlabelledBoardGridRenderObject extends RenderBox {
     markNeedsPaint();
   }
 
+  bool get onOffSwitchLabels => _onOffSwitchLabels;
+  bool _onOffSwitchLabels;
+  set onOffSwitchLabels(bool onOffSwitchLabels) {
+    if (_onOffSwitchLabels == onOffSwitchLabels) return;
+    _onOffSwitchLabels = onOffSwitchLabels;
+    markNeedsPaint();
+  }
+
+  bool get highContrast => _highContrast;
+  bool _highContrast;
+  set highContrast(bool highContrast) {
+    if (_highContrast == highContrast) return;
+    _highContrast = highContrast;
+    markNeedsPaint();
+  }
+
   late double _tileSize;
   Listenable? _tilesListener;
 
@@ -452,7 +476,6 @@ class UnlabelledBoardGridRenderObject extends RenderBox {
   @override
   void paint(PaintingContext context, Offset offset) {
     final spacing = _tileSize * 0.1;
-    final crossColor = TilePainter.getCrossColor(colorScheme);
     for (var x = 0; x < width; x++) {
       for (var y = 0; y < height; y++) {
         final tileState = board[y][x].value;
@@ -466,8 +489,9 @@ class UnlabelledBoardGridRenderObject extends RenderBox {
           tileState,
           canvas: context.canvas,
           tileRect: tileRect,
-          tileColor: TilePainter.getTileColor(colorScheme),
-          crossColor: crossColor,
+          colorScheme: colorScheme,
+          onOffSwitchLabels: onOffSwitchLabels,
+          highContrast: highContrast,
         );
       }
     }
