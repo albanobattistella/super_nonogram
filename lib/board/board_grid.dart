@@ -264,7 +264,10 @@ class LabelledBoardGridRenderObject extends RenderBox
         (constraints.maxWidth - maxRowLabelsWidth) / boardWidth;
     final maxPossibleTileHeight =
         (constraints.maxHeight - maxColumnLabelsHeight) / boardHeight;
-    final tileSize = min(maxPossibleTileWidth, maxPossibleTileHeight);
+    final tileSize = min(
+      128.0, // Avoid excessively large tiles
+      min(maxPossibleTileWidth, maxPossibleTileHeight),
+    );
     _tileSize = tileSize;
 
     // Set the size of the render box
