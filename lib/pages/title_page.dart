@@ -79,7 +79,7 @@ class TitlePage extends StatelessWidget {
                   return const SearchPage();
                 },
               ),
-              if (GamesServicesHelper.osSupported) ...[
+              if (isGamesServicesSupported) ...[
                 const SizedBox(height: 16),
                 ElevatedButton(
                   style: elevatedButtonStyle,
