@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:super_nonogram/data/stows.dart';
 import 'package:super_nonogram/i18n/strings.g.dart';
 import 'package:super_nonogram/settings/animated_app_icon.dart';
@@ -39,7 +38,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     Text(
                       'Aa',
                       style: textTheme.displaySmall?.copyWith(
-                        fontSize: iconTheme.size ?? 24,
+                        fontSize: (iconTheme.size ?? 24) * 0.8,
                       ),
                     ),
                     Text(t.settings.hyperlegibleFont),
@@ -63,7 +62,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     );
                   },
                   children: [
-                    const FaIcon(FontAwesomeIcons.info),
+                    const Icon(Icons.info),
                     Text(t.title.appName),
                     Text(t.settings.about, style: textTheme.labelMedium),
                   ],
