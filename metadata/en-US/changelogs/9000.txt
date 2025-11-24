@@ -1,0 +1,1 @@
+The column and row labels now have a fixed font size, fixing issues where they would become unreadably small or get cut off.

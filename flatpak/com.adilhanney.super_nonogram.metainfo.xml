@@ -78,6 +78,13 @@
     </screenshots>
 
     <releases>
+        <release version="0.9.0" type="development" date="2025-11-24">
+            <description>
+                <ul>
+                    <li>The column and row labels now have a fixed font size, fixing issues where they would become unreadably small or get cut off.</li>
+                </ul>
+            </description>
+        </release>
         <release version="0.8.0" type="development" date="2025-11-22">
             <description>
                 <ul>
