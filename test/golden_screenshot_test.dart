@@ -52,10 +52,7 @@ void _screenshot(
           ScreenshotApp.withConditionalTitlebar(
             device: device,
             title: 'Super Nonogram',
-            theme: SuperNonogramTheme.createTheme(
-              brightness: Brightness.light,
-              colorScheme: null,
-            ),
+            theme: SuperNonogramTheme.createTheme(brightness: Brightness.light),
             home: home,
           ),
         );

@@ -6,11 +6,13 @@ import 'package:super_nonogram/data/stows.dart';
 abstract class SuperNonogramTheme {
   static ThemeData createTheme({
     required Brightness brightness,
-    required ColorScheme? colorScheme,
+    ColorScheme? colorScheme,
+    bool highContrast = false,
   }) {
     colorScheme ??= ColorScheme.fromSeed(
       seedColor: Colors.deepPurple,
       brightness: brightness,
+      contrastLevel: highContrast ? 1.0 : 0.0,
     );
     final textTheme = getTextTheme(stows.hyperlegibleFont.value, colorScheme);
     return ThemeData(

@@ -78,6 +78,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final highContrast = MediaQuery.highContrastOf(context);
     return DynamicColorBuilder(
       builder: (lightDynamic, darkDynamic) {
         return MaterialApp.router(
@@ -87,10 +88,12 @@ class _MyAppState extends State<MyApp> {
           theme: SuperNonogramTheme.createTheme(
             brightness: Brightness.light,
             colorScheme: lightDynamic,
+            highContrast: highContrast,
           ),
           darkTheme: SuperNonogramTheme.createTheme(
             brightness: Brightness.dark,
             colorScheme: darkDynamic,
+            highContrast: highContrast,
           ),
           routerConfig: _router,
         );
