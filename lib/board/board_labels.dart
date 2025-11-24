@@ -102,7 +102,7 @@ class BoardLabels {
     return BoardLabelStatus.fromGroups(answerRow, currentRow);
   }
 
-  static BoardLabelStatus statusOfColumn(
+  static BoardLabelStatus statusOfCol(
     int x,
     BoardLabels answer,
     BoardLabels currentAnswers,

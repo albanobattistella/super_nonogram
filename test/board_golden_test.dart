@@ -6,6 +6,8 @@ import 'package:super_nonogram/theme/theme.dart';
 
 void main() {
   group('Board goldens', () {
+    setUpAll(loadAppFonts); // Fonts are needed before first layout
+
     for (final level in const [1, 10, 20, 50, 99]) {
       testGoldens('Level $level', (tester) async {
         final widget = ScreenshotApp(

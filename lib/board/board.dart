@@ -25,10 +25,6 @@ class Board extends StatefulWidget {
   final VoidCallback onSolved;
   final TileState currentTileAction;
 
-  static const double tileSize = 100;
-  static const double tileSpacing = Board.tileSize * 0.1;
-  static const double labelFontSize = tileSize * 0.2;
-
   @override
   State<Board> createState() => BoardWidgetState();
 }
@@ -69,13 +65,6 @@ class BoardWidgetState extends State<Board> {
 
   Coordinate panStartCoordinate = (x: 0, y: 0);
 
-  Coordinate getCoordinateOfPosition(Offset position) {
-    final columnLabelsHeight = getColumnLabelsHeight(answer);
-    final x = ((position.dx - Board.tileSize) / Board.tileSize).floor();
-    final y = ((position.dy - columnLabelsHeight) / Board.tileSize).floor();
-    return (x: x, y: y);
-  }
-
   TileRelation getTileRelation(int x, int y) {
     if (x < 0 || x >= width || y < 0 || y >= height) {
       return TileRelation.outOfBounds;
@@ -86,25 +75,42 @@ class BoardWidgetState extends State<Board> {
     return TileRelation.valid;
   }
 
-  void onPanStart(int x, int y) {
+  void onPanStart(Coordinate coordinate) {
     for (int x = 0; x < width; x++) {
       for (int y = 0; y < height; y++) {
         boardBackup[y][x].value = board[y][x].value;
       }
     }
 
+    final (:x, :y) = coordinate;
+
     tapHoldTimer?.cancel();
     tapHoldTimer = Timer(const Duration(seconds: 1), () {
       secondaryInput = true;
       board[y][x].value = TileState.crossed;
-      onPanUpdate(x, y);
+      onPanUpdate(coordinate);
     });
+
+    panStartCoordinate = coordinate;
+    // The start position could be out of bounds
+    switch (getTileRelation(x, y)) {
+      case TileRelation.valid:
+        panStartCoordinate = (x: x, y: y);
+        onPanUpdate(coordinate);
+      case TileRelation.outOfBounds:
+      case TileRelation.notInSameRowOrColumn:
+        panStartCoordinate = (x: 0, y: 0);
+    }
   }
 
-  void onPanUpdate(int x, int y) {
+  void onPanUpdate(Coordinate coordinate) {
+    final (:x, :y) = coordinate;
+
     if (x != panStartCoordinate.x || y != panStartCoordinate.y) {
       tapHoldTimer?.cancel();
     }
+
+    if (getTileRelation(x, y) != TileRelation.valid) return;
 
     final TileState targetTileState = secondaryInput
         ? TileState.crossed
@@ -135,6 +141,10 @@ class BoardWidgetState extends State<Board> {
     currentAnswers.value = BoardLabels.fromBoardState(board, width, height);
   }
 
+  void onPanEnd() {
+    tapHoldTimer?.cancel();
+  }
+
   void _updateTile(int x, int y, TileState targetTileState) {
     final tileState = board[y][x];
     final backupTileState =
@@ -153,23 +163,6 @@ class BoardWidgetState extends State<Board> {
       // so just set the tile state indiscriminately
       tileState.value = targetTileState;
     }
-  }
-
-  /// Handles cases where a one-finger pan turns into a two-finger pan.
-  bool isPanCancelled = false;
-  bool checkIfPanCancelled(ScaleUpdateDetails details) {
-    if (isPanCancelled) return true;
-    if (details.pointerCount == 1 && details.scale == 1.0) return false;
-
-    if (kDebugMode) print('Pan cancelled');
-    isPanCancelled = true;
-    for (int x = 0; x < width; x++) {
-      for (int y = 0; y < height; y++) {
-        board[y][x].value = boardBackup[y][x].value;
-      }
-    }
-    currentAnswers.value = BoardLabels.fromBoardState(board, width, height);
-    return true;
   }
 
   void autoselectCompleteRowsCols() {
@@ -201,17 +194,6 @@ class BoardWidgetState extends State<Board> {
     widget.onSolved();
   }
 
-  /// Returns the expected height of the first row
-  /// (the one with the column labels).
-  @visibleForTesting
-  static double getColumnLabelsHeight(BoardLabels answer) {
-    /// The number of lines in the longest column label.
-    final lines = answer.columns.map((column) => column.length).reduce(max);
-
-    return lines * Board.labelFontSize * colLabelLineHeight +
-        Board.tileSpacing / 2;
-  }
-
   @override
   void initState() {
     autoselectCompleteRowsCols();
@@ -222,77 +204,37 @@ class BoardWidgetState extends State<Board> {
 
   @override
   Widget build(BuildContext context) {
-    final columnLabelsHeight = getColumnLabelsHeight(answer);
-    return FittedBox(
-      child: Padding(
-        padding: const EdgeInsets.all(Board.tileSpacing * 2),
-        child: SizedBox(
-          width: Board.tileSize * (width + 1),
-          height: Board.tileSize * height + columnLabelsHeight,
-          child: Listener(
-            onPointerDown: (event) {
-              secondaryInput = event.buttons == kSecondaryButton;
-            },
-            onPointerUp: (event) {
-              secondaryInput = false;
-            },
-            child: InteractiveViewer(
-              onInteractionStart: (details) {
-                isPanCancelled = false;
-                final (:x, :y) = getCoordinateOfPosition(
-                  details.localFocalPoint,
-                );
-                onPanStart(x, y);
-                panStartCoordinate = (x: x, y: y);
-                switch (getTileRelation(x, y)) {
-                  case TileRelation.valid:
-                    panStartCoordinate = (x: x, y: y);
-                    onPanUpdate(x, y);
-                  case TileRelation.outOfBounds:
-                  case TileRelation.notInSameRowOrColumn:
-                    panStartCoordinate = (x: 0, y: 0);
-                    isPanCancelled = true;
-                }
-              },
-              onInteractionUpdate: (details) {
-                if (checkIfPanCancelled(details)) return;
-                final (:x, :y) = getCoordinateOfPosition(
-                  details.localFocalPoint,
-                );
-                if (getTileRelation(x, y) == TileRelation.valid) {
-                  onPanUpdate(x, y);
-                }
-              },
-              onInteractionEnd: (details) {
-                tapHoldTimer?.cancel();
-              },
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  BoardGrid(
-                    width: width,
-                    height: height,
-                    answer: answer,
-                    currentAnswers: currentAnswers,
-                    board: board,
-                    colLabelLineHeight: colLabelLineHeight,
-                    columnLabelsHeight: columnLabelsHeight,
-                  ),
-                  if (widget.srcImage != null)
-                    Opacity(
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Listener(
+        onPointerDown: (event) {
+          secondaryInput =
+              event.buttons == kSecondaryButton ||
+              event.kind == PointerDeviceKind.invertedStylus;
+        },
+        onPointerUp: (event) {
+          secondaryInput = false;
+        },
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            BoardGrid(
+              width: width,
+              height: height,
+              answer: answer,
+              currentAnswers: currentAnswers,
+              board: board,
+              overlay: widget.srcImage == null
+                  ? null
+                  : Opacity(
                       opacity: 0.2,
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          top: Board.tileSize,
-                          left: Board.tileSize,
-                        ),
-                        child: Image.memory(widget.srcImage!, fit: BoxFit.fill),
-                      ),
+                      child: Image.memory(widget.srcImage!, fit: BoxFit.fill),
                     ),
-                ],
-              ),
+              onPanStart: onPanStart,
+              onPanUpdate: onPanUpdate,
+              onPanEnd: onPanEnd,
             ),
-          ),
+          ],
         ),
       ),
     );
@@ -300,6 +242,7 @@ class BoardWidgetState extends State<Board> {
 
   @override
   void dispose() {
+    tapHoldTimer?.cancel();
     currentAnswers.removeListener(_onCurrentAnswersChanged);
     super.dispose();
   }

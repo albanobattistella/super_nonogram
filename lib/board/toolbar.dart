@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:super_nonogram/board/board.dart';
 import 'package:super_nonogram/board/tile.dart';
 import 'package:super_nonogram/board/tile_state.dart';
 
@@ -13,7 +12,6 @@ class Toolbar extends StatelessWidget {
   final TileState currentTileAction;
   final ValueSetter<TileState> setTileAction;
 
-  static const _iconSize = Board.tileSize * 0.5;
   static const _unselectedIconSizeRatio = 0.6;
   static const _tileActions = [TileState.selected, TileState.crossed];
 
@@ -31,11 +29,7 @@ class Toolbar extends StatelessWidget {
               scale: currentTileAction == tileAction
                   ? 1
                   : _unselectedIconSizeRatio,
-              child: SizedBox(
-                width: _iconSize,
-                height: _iconSize,
-                child: Tile(tileState: tileAction),
-              ),
+              child: TilePreview(tileState: tileAction),
             ),
           ),
       ],

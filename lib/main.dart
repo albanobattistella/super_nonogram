@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:games_services/games_services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:super_nonogram/data/stows.dart';
 import 'package:super_nonogram/games_services/games_services_helper.dart';
 import 'package:super_nonogram/pages/play_page.dart';
