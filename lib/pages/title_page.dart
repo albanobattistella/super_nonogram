@@ -27,6 +27,14 @@ class TitlePage extends StatelessWidget {
       padding: WidgetStatePropertyAll(
         const EdgeInsets.symmetric(vertical: 24, horizontal: 8),
       ),
+      backgroundColor: WidgetStatePropertyAll(
+        Color.lerp(
+          theme.colorScheme.surface,
+          theme.colorScheme.primaryContainer,
+          0.4,
+        )!,
+      ),
+      foregroundColor: WidgetStatePropertyAll(theme.colorScheme.onSurface),
     );
     final playButtonStyle = elevatedButtonStyle.copyWith(
       minimumSize: WidgetStatePropertyAll(Size(double.infinity, 128)),
