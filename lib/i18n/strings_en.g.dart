@@ -58,6 +58,9 @@ class TranslationsTitleEn {
 	/// en: 'Play images'
 	String get playImages => 'Play\nimages';
 
+	/// en: 'Play classic'
+	String get playClassic => 'Play\nclassic';
+
 	/// en: 'Achievements'
 	String get achievements => 'Achievements';
 }
@@ -111,6 +114,9 @@ class TranslationsPlayEn {
 
 	/// en: 'Restart puzzle'
 	String get restartPuzzle => 'Restart puzzle';
+
+	/// en: 'Play again'
+	String get playAgain => 'Play again';
 
 	/// en: 'Back to title page'
 	String get backToTitlePage => 'Back to title page';

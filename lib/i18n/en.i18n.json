@@ -3,6 +3,7 @@
     "appName": "Super Nonogram",
     "playLevels": "Play\nlevels",
     "playImages": "Play\nimages",
+    "playClassic": "Play\nclassic",
     "achievements": "Achievements"
   },
   "search": {
@@ -19,6 +20,7 @@
     "nextLevel": "Next level",
     "restartLevel": "Restart level",
     "restartPuzzle": "Restart puzzle",
+    "playAgain": "Play again",
     "backToTitlePage": "Back to title page",
     "imageAttribution(rich)": "Image by $author from $pixabay"
   },

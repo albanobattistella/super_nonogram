@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:games_services/games_services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:super_nonogram/data/game_mode.dart';
 import 'package:super_nonogram/data/stows.dart';
 import 'package:super_nonogram/games_services/games_services_helper.dart';
 import 'package:super_nonogram/pages/play_page.dart';
@@ -18,10 +19,23 @@ final _router = GoRouter(
     GoRoute(path: '/search', builder: (context, state) => const SearchPage()),
     GoRoute(
       path: '/play',
-      builder: (context, state) => PlayPage(
-        query: state.uri.queryParameters['query'],
-        level: int.tryParse(state.uri.queryParameters['level'] ?? ''),
-      ),
+      builder: (context, state) {
+        final query = state.uri.queryParameters['query'];
+        final level = int.tryParse(state.uri.queryParameters['level'] ?? '');
+        if (query != null) {
+          return PlayPage(ImageGameMode(query));
+        } else if (level != null) {
+          return PlayPage(LevelGameMode(level));
+        } else if (state.uri.queryParameters.containsKey('classic')) {
+          return PlayPage(
+            ClassicGameMode(
+              int.tryParse(state.uri.queryParameters['classic']!),
+            ),
+          );
+        } else {
+          throw Exception('Either query or level must be provided');
+        }
+      },
     ),
     GoRoute(
       path: '/settings',

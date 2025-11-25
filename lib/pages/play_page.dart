@@ -8,12 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:games_services/games_services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:super_nonogram/api/api.dart';
+import 'package:super_nonogram/api/classic_puzzles.dart';
 import 'package:super_nonogram/api/file_manager.dart';
 import 'package:super_nonogram/api/level_to_board.dart';
 import 'package:super_nonogram/board/board.dart';
 import 'package:super_nonogram/board/ngb.dart';
 import 'package:super_nonogram/board/tile_state.dart';
 import 'package:super_nonogram/board/toolbar.dart';
+import 'package:super_nonogram/data/game_mode.dart';
 import 'package:super_nonogram/data/stows.dart';
 import 'package:super_nonogram/games_services/achievement_ids.dart';
 import 'package:super_nonogram/games_services/games_services_helper.dart';
@@ -21,15 +23,9 @@ import 'package:super_nonogram/i18n/strings.g.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class PlayPage extends StatefulWidget {
-  const PlayPage({super.key, required this.query, required this.level})
-    : assert(
-        (query != null) ^ (level != null),
-        'Either query or level must be provided',
-      ),
-      assert(level == null || level > 0, 'Level must be greater than 0');
+  const PlayPage(this.gameMode, {super.key});
 
-  final String? query;
-  final int? level;
+  final GameMode gameMode;
 
   @override
   PlayPageState createState() => PlayPageState();
@@ -51,25 +47,29 @@ class PlayPageState extends State<PlayPage> {
   }
 
   void loadBoard() async {
-    if (widget.query != null) {
-      final encodedQuery = Uri.encodeComponent(widget.query!);
-      final ngbContents = await FileManager.readFile<String>(
-        '/$encodedQuery.ngb',
-      );
-      final infoJson = await FileManager.readFile<String>(
-        '/$encodedQuery.json',
-      );
-      imageBytes = await FileManager.readFile<Uint8List>('/$encodedQuery.png');
-      _loadColorSchemeFromImage();
-      imageInfo = infoJson == null
-          ? null
-          : PixabayImage.fromJson(jsonDecode(infoJson));
-      answerBoard = Ngb.readNgb(ngbContents!);
-      if (mounted) setState(() {});
-    } else if (widget.level != null) {
-      answerBoard = LevelToBoard.generate(widget.level!);
-      setState(() {});
+    switch (widget.gameMode) {
+      case (ImageGameMode gameMode):
+        final encodedQuery = Uri.encodeComponent(gameMode.query);
+        final ngbContents = await FileManager.readFile<String>(
+          '/$encodedQuery.ngb',
+        );
+        final infoJson = await FileManager.readFile<String>(
+          '/$encodedQuery.json',
+        );
+        imageBytes = await FileManager.readFile<Uint8List>(
+          '/$encodedQuery.png',
+        );
+        _loadColorSchemeFromImage();
+        imageInfo = infoJson == null
+            ? null
+            : PixabayImage.fromJson(jsonDecode(infoJson));
+        answerBoard = Ngb.readNgb(ngbContents!);
+      case (LevelGameMode gameMode):
+        answerBoard = LevelToBoard.generate(gameMode.level);
+      case (ClassicGameMode gameMode):
+        answerBoard = ClassicPuzzles.generate(seed: gameMode.seed);
     }
+    if (mounted) setState(() {});
   }
 
   @override
@@ -102,10 +102,9 @@ class PlayPageState extends State<PlayPage> {
   }
 
   void onSolved() {
-    bool onALevel = widget.level != null;
-
-    if (onALevel) {
-      recordLevelCompleteAchievement(widget.level!);
+    final gameMode = widget.gameMode;
+    if (gameMode is LevelGameMode) {
+      recordLevelCompleteAchievement(gameMode.level);
     }
 
     showDialog(
@@ -114,11 +113,12 @@ class PlayPageState extends State<PlayPage> {
       builder: (context) {
         final colorScheme = Theme.of(context).colorScheme;
         return AlertDialog(
-          title: Text(
-            onALevel
-                ? t.play.levelCompleted(n: widget.level!)
-                : t.play.puzzleCompleted,
-          ),
+          title: Text(switch (gameMode) {
+            (LevelGameMode gameMode) => t.play.levelCompleted(
+              n: gameMode.level,
+            ),
+            _ => t.play.puzzleCompleted,
+          }),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -166,20 +166,27 @@ class PlayPageState extends State<PlayPage> {
             ),
             TextButton(
               onPressed: () {
-                context.pushReplacement(
-                  onALevel
-                      ? '/play?level=${stows.currentLevel.value}'
-                      : '/play?query=${Uri.encodeComponent(widget.query!)}',
-                );
+                switch (gameMode) {
+                  case (LevelGameMode gameMode):
+                    context.pushReplacement('/play?level=${gameMode.level}');
+                  case (ImageGameMode gameMode):
+                    context.pushReplacement(
+                      '/play?query=${Uri.encodeComponent(gameMode.query)}',
+                    );
+                  case (ClassicGameMode _):
+                    context.pushReplacement('/play?classic');
+                }
               },
-              child: Text(
-                onALevel ? t.play.restartLevel : t.play.restartPuzzle,
-              ),
+              child: Text(switch (gameMode) {
+                (LevelGameMode _) => t.play.restartLevel,
+                (ImageGameMode _) => t.play.restartPuzzle,
+                (ClassicGameMode _) => t.play.playAgain,
+              }),
             ),
-            if (onALevel)
+            if (gameMode is LevelGameMode)
               TextButton(
                 onPressed: () {
-                  stows.currentLevel.value = widget.level! + 1;
+                  stows.currentLevel.value = gameMode.level + 1;
                   context.pushReplacement(
                     '/play?level=${stows.currentLevel.value}',
                   );
@@ -196,6 +203,7 @@ class PlayPageState extends State<PlayPage> {
   Widget build(BuildContext context) {
     final parentTheme = Theme.of(context);
     final textTheme = parentTheme.textTheme;
+    final gameMode = widget.gameMode;
     return ValueListenableBuilder(
       valueListenable: colorSchemeFromImage,
       builder: (context, colorSchemeFromImage, child) {
@@ -208,17 +216,17 @@ class PlayPageState extends State<PlayPage> {
         appBar: AppBar(
           title: Text(t.title.appName),
           // Display level selector
-          bottom: widget.level == null
+          bottom: gameMode is! LevelGameMode
               ? null
               : PreferredSize(
                   preferredSize: const Size.fromHeight(48),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      if (widget.level! > 1)
+                      if (gameMode.level > 1)
                         IconButton(
                           onPressed: () {
-                            stows.currentLevel.value = widget.level! - 1;
+                            stows.currentLevel.value = gameMode.level - 1;
                             context.pushReplacement(
                               '/play?level=${stows.currentLevel.value}',
                             );
@@ -226,12 +234,12 @@ class PlayPageState extends State<PlayPage> {
                           icon: const Icon(Icons.arrow_left),
                         ),
                       Text(
-                        t.play.level(n: widget.level!),
+                        t.play.level(n: gameMode.level),
                         style: textTheme.titleLarge,
                       ),
                       IconButton(
                         onPressed: () {
-                          stows.currentLevel.value = widget.level! + 1;
+                          stows.currentLevel.value = gameMode.level + 1;
                           context.pushReplacement(
                             '/play?level=${stows.currentLevel.value}',
                           );

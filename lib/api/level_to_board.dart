@@ -1,29 +1,20 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:super_nonogram/api/classic_puzzles.dart';
 import 'package:super_nonogram/board/board.dart';
-import 'package:super_nonogram/board/tile_state.dart';
 
 abstract class LevelToBoard {
   static BoardState? generate(int level) {
     final size = sizeAtLevel(level);
     final pValue = pValueAtLevel(level);
 
-    final BoardState board = List.generate(
-      size,
-      (_) => List.generate(size, (_) => ValueNotifier(TileState.empty)),
+    return ClassicPuzzles.generate(
+      width: size,
+      height: size,
+      pValue: pValue,
+      seed: level,
     );
-
-    final r = Random(level);
-    for (final row in board) {
-      for (final tile in row) {
-        if (r.nextDouble() < pValue) {
-          tile.value = TileState.selected;
-        }
-      }
-    }
-
-    return board;
   }
 
   /// Returns the probability of a given tile being selected at the given level.

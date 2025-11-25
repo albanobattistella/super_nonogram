@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_screenshot/golden_screenshot.dart';
+import 'package:super_nonogram/data/game_mode.dart';
 import 'package:super_nonogram/pages/play_page.dart';
 import 'package:super_nonogram/theme/theme.dart';
 
@@ -16,7 +17,7 @@ void main() {
             brightness: Brightness.light,
             platform: TargetPlatform.android,
           ),
-          home: PlayPage(level: level, query: null),
+          home: PlayPage(LevelGameMode(level)),
         );
         await tester.pumpWidget(widget);
         await tester.loadAssets();

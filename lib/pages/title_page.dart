@@ -25,7 +25,7 @@ class TitlePage extends StatelessWidget {
         textTheme.titleLarge!.copyWith(fontSize: 24),
       ),
       padding: WidgetStatePropertyAll(
-        const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+        const EdgeInsets.symmetric(vertical: 24, horizontal: 8),
       ),
     );
     final playButtonStyle = elevatedButtonStyle.copyWith(
@@ -63,7 +63,10 @@ class TitlePage extends StatelessWidget {
                       onPressed: () {
                         context.push('/play?level=${stows.currentLevel.value}');
                       },
-                      child: Text(t.title.playLevels, textAlign: .center),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(t.title.playLevels, textAlign: .center),
+                      ),
                     ),
                   ),
                   Expanded(
@@ -77,9 +80,31 @@ class TitlePage extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
+                        context.push('/play?classic');
+                      },
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(t.title.playClassic, textAlign: .center),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: playButtonStyle.copyWith(
+                        backgroundColor: WidgetStatePropertyAll(
+                          theme.colorScheme.tertiaryContainer,
+                        ),
+                        foregroundColor: WidgetStatePropertyAll(
+                          theme.colorScheme.onTertiaryContainer,
+                        ),
+                      ),
+                      onPressed: () {
                         context.push('/search');
                       },
-                      child: Text(t.title.playImages, textAlign: .center),
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(t.title.playImages, textAlign: .center),
+                      ),
                     ),
                   ),
                 ],

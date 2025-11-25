@@ -17,6 +17,7 @@ import 'package:super_nonogram/board/board.dart';
 import 'package:super_nonogram/board/board_labels.dart';
 import 'package:super_nonogram/board/ngb.dart';
 import 'package:super_nonogram/board/tile_state.dart';
+import 'package:super_nonogram/data/game_mode.dart';
 import 'package:super_nonogram/pages/play_page.dart';
 import 'package:super_nonogram/pages/search_page.dart';
 import 'package:super_nonogram/pages/settings_page.dart';
@@ -44,7 +45,7 @@ void main() {
 
     _screenshot(
       '3-heart',
-      home: PlayPage(query: 'prismatic heart', level: null),
+      home: PlayPage(ImageGameMode('prismatic heart')),
       beforeScreenshot: (tester) async {
         final playPageState = tester.state<PlayPageState>(
           find.byType(PlayPage),
@@ -59,11 +60,11 @@ void main() {
       },
     );
 
-    _screenshot('4-level-1', home: PlayPage(query: null, level: 1));
+    _screenshot('4-level-1', home: PlayPage(LevelGameMode(1)));
 
     _screenshot(
       '5-level-21-incomplete',
-      home: PlayPage(query: null, level: 21),
+      home: PlayPage(LevelGameMode(21)),
       beforeScreenshot: (tester) async {
         final playPageState = tester.state<PlayPageState>(
           find.byType(PlayPage),
@@ -91,7 +92,7 @@ void main() {
 
     _screenshot(
       '6-level-21-complete',
-      home: PlayPage(query: null, level: 21),
+      home: PlayPage(LevelGameMode(21)),
       beforeScreenshot: (tester) async {
         final playPageState = tester.state<PlayPageState>(
           find.byType(PlayPage),
