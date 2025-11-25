@@ -97,7 +97,7 @@ class PlayPageState extends State<PlayPage> {
       provider: MemoryImage(imageBytes!),
       dynamicSchemeVariant: .fidelity,
       brightness: parentTheme.brightness,
-      contrastLevel: MediaQuery.highContrastOf(context) ? 0.9 : 0.0,
+      contrastLevel: MediaQuery.highContrastOf(context) ? 0.7 : 0.0,
     );
   }
 
