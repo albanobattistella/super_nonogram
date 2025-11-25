@@ -50,8 +50,11 @@ class TilePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant TilePainter oldDelegate) {
-    return oldDelegate.tileState != tileState;
+  bool shouldRepaint(TilePainter oldDelegate) {
+    return oldDelegate.tileState != tileState ||
+        oldDelegate.colorScheme != colorScheme ||
+        oldDelegate.onOffSwitchLabels != onOffSwitchLabels ||
+        oldDelegate.highContrast != highContrast;
   }
 
   static void paintTile(

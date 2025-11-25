@@ -12,7 +12,7 @@ abstract class SuperNonogramTheme {
     colorScheme ??= ColorScheme.fromSeed(
       seedColor: Colors.deepPurple,
       brightness: brightness,
-      contrastLevel: highContrast ? 1.0 : 0.0,
+      contrastLevel: highContrast ? 0.9 : 0.0,
     );
     final textTheme = getTextTheme(stows.hyperlegibleFont.value, colorScheme);
     return ThemeData(

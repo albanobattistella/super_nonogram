@@ -1,6 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -32,13 +32,15 @@ class PlayPage extends StatefulWidget {
   final int? level;
 
   @override
-  State<PlayPage> createState() => _PlayPageState();
+  PlayPageState createState() => PlayPageState();
 }
 
-class _PlayPageState extends State<PlayPage> {
+@visibleForTesting
+class PlayPageState extends State<PlayPage> {
   PixabayImage? imageInfo;
   Uint8List? imageBytes;
   BoardState? answerBoard;
+  final colorSchemeFromImage = ValueNotifier<ColorScheme?>(null);
 
   TileState currentTileAction = TileState.selected;
 
@@ -58,6 +60,7 @@ class _PlayPageState extends State<PlayPage> {
         '/$encodedQuery.json',
       );
       imageBytes = await FileManager.readFile<Uint8List>('/$encodedQuery.png');
+      _loadColorSchemeFromImage();
       imageInfo = infoJson == null
           ? null
           : PixabayImage.fromJson(jsonDecode(infoJson));
@@ -67,6 +70,35 @@ class _PlayPageState extends State<PlayPage> {
       answerBoard = LevelToBoard.generate(widget.level!);
       setState(() {});
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (imageBytes != null) {
+      final brightness = Theme.of(context).brightness;
+      if (brightness != colorSchemeFromImage.value?.brightness) {
+        _loadColorSchemeFromImage();
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    colorSchemeFromImage.dispose();
+    super.dispose();
+  }
+
+  void _loadColorSchemeFromImage() async {
+    if (imageBytes == null) return;
+    final parentTheme = Theme.of(context);
+    colorSchemeFromImage.value = await ColorScheme.fromImageProvider(
+      provider: MemoryImage(imageBytes!),
+      dynamicSchemeVariant: .fidelity,
+      brightness: parentTheme.brightness,
+      contrastLevel: MediaQuery.highContrastOf(context) ? 0.9 : 0.0,
+    );
   }
 
   void onSolved() {
@@ -164,82 +196,77 @@ class _PlayPageState extends State<PlayPage> {
   Widget build(BuildContext context) {
     final parentTheme = Theme.of(context);
     final textTheme = parentTheme.textTheme;
-    return FutureBuilder(
-      future: imageBytes == null
-          ? null
-          : ColorScheme.fromImageProvider(
-              provider: MemoryImage(imageBytes!),
-              brightness: parentTheme.brightness,
-            ),
-      builder: (context, snapshot) {
-        final colorScheme = snapshot.data ?? parentTheme.colorScheme;
+    return ValueListenableBuilder(
+      valueListenable: colorSchemeFromImage,
+      builder: (context, colorSchemeFromImage, child) {
         return Theme(
-          data: parentTheme.copyWith(colorScheme: colorScheme),
-          child: Scaffold(
-            appBar: AppBar(
-              title: Text(t.title.appName),
-              // Display level selector
-              bottom: widget.level == null
-                  ? null
-                  : PreferredSize(
-                      preferredSize: const Size.fromHeight(48),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          if (widget.level! > 1)
-                            IconButton(
-                              onPressed: () {
-                                stows.currentLevel.value = widget.level! - 1;
-                                context.pushReplacement(
-                                  '/play?level=${stows.currentLevel.value}',
-                                );
-                              },
-                              icon: const Icon(Icons.arrow_left),
-                            ),
-                          Text(
-                            t.play.level(n: widget.level!),
-                            style: textTheme.titleLarge,
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              stows.currentLevel.value = widget.level! + 1;
-                              context.pushReplacement(
-                                '/play?level=${stows.currentLevel.value}',
-                              );
-                            },
-                            icon: const Icon(Icons.arrow_right),
-                          ),
-                        ],
-                      ),
-                    ),
-            ),
-            body: Column(
-              children: [
-                Expanded(
-                  child: Center(
-                    child: answerBoard == null
-                        ? const CircularProgressIndicator()
-                        : Board(
-                            answerBoard: answerBoard!,
-                            srcImage: imageBytes,
-                            onSolved: onSolved,
-                            currentTileAction: currentTileAction,
-                          ),
-                  ),
-                ),
-                SafeArea(
-                  child: Toolbar(
-                    currentTileAction: currentTileAction,
-                    setTileAction: (tileAction) => setState(() {
-                      currentTileAction = tileAction;
-                    }),
-                  ),
-                ),
-              ],
-            ),
-          ),
+          data: parentTheme.copyWith(colorScheme: colorSchemeFromImage),
+          child: child!,
         );
       },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(t.title.appName),
+          // Display level selector
+          bottom: widget.level == null
+              ? null
+              : PreferredSize(
+                  preferredSize: const Size.fromHeight(48),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (widget.level! > 1)
+                        IconButton(
+                          onPressed: () {
+                            stows.currentLevel.value = widget.level! - 1;
+                            context.pushReplacement(
+                              '/play?level=${stows.currentLevel.value}',
+                            );
+                          },
+                          icon: const Icon(Icons.arrow_left),
+                        ),
+                      Text(
+                        t.play.level(n: widget.level!),
+                        style: textTheme.titleLarge,
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          stows.currentLevel.value = widget.level! + 1;
+                          context.pushReplacement(
+                            '/play?level=${stows.currentLevel.value}',
+                          );
+                        },
+                        icon: const Icon(Icons.arrow_right),
+                      ),
+                    ],
+                  ),
+                ),
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: Center(
+                child: answerBoard == null
+                    ? const CircularProgressIndicator()
+                    : Board(
+                        answerBoard: answerBoard!,
+                        srcImage: imageBytes,
+                        onSolved: onSolved,
+                        currentTileAction: currentTileAction,
+                      ),
+              ),
+            ),
+            SafeArea(
+              child: Toolbar(
+                currentTileAction: currentTileAction,
+                setTileAction: (tileAction) => setState(() {
+                  currentTileAction = tileAction;
+                }),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

@@ -96,7 +96,8 @@ class PixabayImage {
       '?utm_source=link-attribution&utm_medium=referral'
       '&utm_campaign=image&utm_content=$id';
 
-  const PixabayImage._({
+  @visibleForTesting
+  const PixabayImage({
     required this.id,
     required this.pageUrl,
     required this.previewUrl,
@@ -109,7 +110,7 @@ class PixabayImage {
   });
 
   factory PixabayImage.fromJson(Map<String, dynamic> json) {
-    return PixabayImage._(
+    return PixabayImage(
       id: json['id'],
       pageUrl: json['pageURL'],
       previewUrl: json['previewURL'],

@@ -8,7 +8,12 @@ import 'package:super_nonogram/board/ngb.dart';
 import 'package:super_nonogram/i18n/strings.g.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+  const SearchPage({
+    super.key,
+    @visibleForTesting this.showPreviousPuzzles = true,
+  });
+
+  final bool showPreviousPuzzles;
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -109,7 +114,7 @@ class _SearchPageState extends State<SearchPage> {
                   child: Text(t.search.create),
                 ),
                 const SizedBox(height: 32),
-                const PreviousPuzzles(),
+                if (widget.showPreviousPuzzles) const PreviousPuzzles(),
               ],
             ),
           ),

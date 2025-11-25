@@ -4,9 +4,17 @@
 /// or `flutter test` to compare the screenshots to the golden files.
 library;
 
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:golden_screenshot/golden_screenshot.dart';
+import 'package:super_nonogram/api/api.dart';
+import 'package:super_nonogram/api/file_manager.dart';
+import 'package:super_nonogram/api/image_to_board.dart';
+import 'package:super_nonogram/board/ngb.dart';
+import 'package:super_nonogram/pages/play_page.dart';
 import 'package:super_nonogram/pages/search_page.dart';
 import 'package:super_nonogram/pages/title_page.dart';
 import 'package:super_nonogram/theme/theme.dart';
@@ -17,22 +25,33 @@ void main() {
   group('Screenshot:', () {
     TestWidgetsFlutterBinding.ensureInitialized();
     setupMockPathProvider();
+    setUpAll(_createPrismaticHeartPuzzle);
 
     _screenshot('1-title', home: TitlePage());
 
     _screenshot(
       '2-search',
-      home: SearchPage(),
+      home: SearchPage(showPreviousPuzzles: false),
       beforeScreenshot: (tester) async {
-        final context = tester.element(find.byType(SearchPage));
-        if (Theme.of(context).platform == TargetPlatform.linux) {
-          // We haven't automated all the screenshots yet, so match the existing
-          // screenshots on Linux with a frog search.
-          await tester.enterText(find.byType(TextField), 'frog');
-        } else {
-          await tester.enterText(find.byType(TextField), 'prismatic heart');
-        }
+        await tester.enterText(find.byType(TextField), 'prismatic heart');
         await tester.pump();
+      },
+    );
+
+    _screenshot(
+      '3-heart',
+      home: PlayPage(query: 'prismatic heart', level: null),
+      beforeScreenshot: (tester) async {
+        final playPageState = tester.state<PlayPageState>(
+          find.byType(PlayPage),
+        );
+        // Wait for the board to load.
+        while (playPageState.colorSchemeFromImage.value == null) {
+          await tester.runAsync(
+            () => Future.delayed(const Duration(milliseconds: 10)),
+          );
+          await tester.pump();
+        }
       },
     );
   });
@@ -74,4 +93,36 @@ void _screenshot(
       });
     }
   });
+}
+
+Future<void> _createPrismaticHeartPuzzle([
+  String query = 'prismatic heart',
+]) async {
+  final baseFilename = Uri.encodeComponent(query);
+  final fileNgb = '/$baseFilename.ngb';
+  final filePng = '/$baseFilename.png';
+  final fileJson = '/$baseFilename.json';
+
+  final srcImage = File(
+    'test/test_assets/prismatic_heart.png',
+  ).readAsBytesSync();
+  final board = await ImageToBoard.importFromBytes(srcImage);
+  final info = PixabayImage(
+    id: 1237242,
+    pageUrl:
+        'https://pixabay.com/vectors/colorful-prismatic-chromatic-1237242/',
+    previewUrl: '_',
+    previewSize: const Size(150, 150),
+    webformatUrl: '_',
+    webformatSize: const Size(640, 640),
+    authorId: 1086657,
+    authorName: 'GDJ',
+    authorImageUrl: '_',
+  );
+
+  final ngb = Ngb.writeNgb(board!);
+  await FileManager.writeFile(fileNgb, string: ngb);
+  await FileManager.writeFile(filePng, bytes: srcImage);
+  await FileManager.writeFile(fileJson, string: jsonEncode(info));
+  PreviousPuzzles.recordPuzzle(query);
 }
