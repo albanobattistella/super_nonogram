@@ -9,7 +9,7 @@ part of 'strings.g.dart';
 
 // Path: <root>
 typedef TranslationsEn = Translations; // ignore: unused_element
-class Translations implements BaseTranslations<AppLocale, Translations> {
+class Translations with BaseTranslations<AppLocale, Translations> {
 	/// Returns the current translations of the given [context].
 	///
 	/// Usage:
@@ -141,6 +141,6 @@ class TranslationsSettingsEn {
 	/// en: 'Tap here for more information about this app'
 	String get about => 'Tap here for more information about this app';
 
-	/// en: 'Super Nonogram Copyright (C) 2023 Adil Hanney This program comes with absolutely no warranty. This is free software, and you are welcome to redistribute it under certain conditions.'
-	String get legalese => 'Super Nonogram  Copyright (C) 2023  Adil Hanney\nThis program comes with absolutely no warranty. This is free software, and you are welcome to redistribute it under certain conditions.';
+	/// en: 'Super Nonogram Copyright (C) 2025 Adil Hanney This program comes with absolutely no warranty. This is free software, and you are welcome to redistribute it under certain conditions.'
+	String get legalese => 'Super Nonogram  Copyright (C) 2025  Adil Hanney\nThis program comes with absolutely no warranty. This is free software, and you are welcome to redistribute it under certain conditions.';
 }
