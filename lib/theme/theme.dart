@@ -1,3 +1,4 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,10 +10,9 @@ abstract class SuperNonogramTheme {
     ColorScheme? colorScheme,
     bool highContrast = false,
   }) {
-    colorScheme ??= ColorScheme.fromSeed(
-      seedColor: Colors.deepPurple,
+    colorScheme ??= _getDefaultColorScheme(
       brightness: brightness,
-      contrastLevel: highContrast ? 0.7 : 0.0,
+      highContrast: highContrast,
     );
     final textTheme = getTextTheme(stows.hyperlegibleFont.value, colorScheme);
     return ThemeData(
@@ -62,6 +62,16 @@ abstract class SuperNonogramTheme {
       labelMedium: base.labelMedium!.merge(bodyStyle),
       labelSmall: base.labelSmall!.merge(bodyStyle),
     );
+  }
+
+  static ColorScheme _getDefaultColorScheme({
+    required Brightness brightness,
+    required bool highContrast,
+  }) {
+    final scheme = highContrast ? FlexScheme.materialHc : FlexScheme.deepPurple;
+    return brightness == Brightness.light
+        ? FlexColorScheme.light(scheme: scheme).toScheme
+        : FlexColorScheme.dark(scheme: scheme).toScheme;
   }
 
   static (TextStyle, TextStyle) _getHeaderAndBodyTextStyles({
