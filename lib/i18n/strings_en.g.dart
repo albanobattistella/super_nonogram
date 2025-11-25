@@ -53,10 +53,10 @@ class TranslationsTitleEn {
 	String get appName => 'Super Nonogram';
 
 	/// en: 'Play levels'
-	String get playLevels => 'Play levels';
+	String get playLevels => 'Play\nlevels';
 
 	/// en: 'Play images'
-	String get playImages => 'Play images';
+	String get playImages => 'Play\nimages';
 
 	/// en: 'Achievements'
 	String get achievements => 'Achievements';

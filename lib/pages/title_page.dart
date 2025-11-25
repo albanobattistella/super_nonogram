@@ -1,14 +1,11 @@
 import 'dart:math';
 
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:games_services/games_services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:super_nonogram/data/stows.dart';
 import 'package:super_nonogram/games_services/games_services_helper.dart';
 import 'package:super_nonogram/i18n/strings.g.dart';
-import 'package:super_nonogram/pages/search_page.dart';
-import 'package:super_nonogram/pages/settings_page.dart';
 
 class TitlePage extends StatelessWidget {
   const TitlePage({super.key});
@@ -19,18 +16,20 @@ class TitlePage extends StatelessWidget {
     final textTheme = theme.textTheme;
     final screenSize = MediaQuery.sizeOf(context);
 
-    final double buttonFontSize = switch (screenSize.width) {
-      < 400 => 16,
-      < 600 => 24,
-      _ => 32,
-    };
-
     final buttonShape = RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(buttonFontSize * 2),
+      borderRadius: BorderRadius.circular(16),
     );
     final elevatedButtonStyle = ElevatedButtonTheme.of(context).style!.copyWith(
       shape: WidgetStatePropertyAll(buttonShape),
-      textStyle: WidgetStatePropertyAll(textTheme.titleLarge!),
+      textStyle: WidgetStatePropertyAll(
+        textTheme.titleLarge!.copyWith(fontSize: 24),
+      ),
+      padding: WidgetStatePropertyAll(
+        const EdgeInsets.symmetric(vertical: 24, horizontal: 32),
+      ),
+    );
+    final playButtonStyle = elevatedButtonStyle.copyWith(
+      minimumSize: WidgetStatePropertyAll(Size(double.infinity, 128)),
     );
 
     return Scaffold(
@@ -44,75 +43,60 @@ class TitlePage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
+            spacing: 16,
             children: [
               Text(t.title.appName, style: textTheme.displayMedium),
-              const SizedBox(height: 64),
+              const SizedBox(height: 32),
+              Row(
+                spacing: 16,
+                children: [
+                  Expanded(
+                    child: ElevatedButton(
+                      style: playButtonStyle.copyWith(
+                        backgroundColor: WidgetStatePropertyAll(
+                          theme.colorScheme.primaryContainer,
+                        ),
+                        foregroundColor: WidgetStatePropertyAll(
+                          theme.colorScheme.onPrimaryContainer,
+                        ),
+                      ),
+                      onPressed: () {
+                        context.push('/play?level=${stows.currentLevel.value}');
+                      },
+                      child: Text(t.title.playLevels, textAlign: .center),
+                    ),
+                  ),
+                  Expanded(
+                    child: ElevatedButton(
+                      style: playButtonStyle.copyWith(
+                        backgroundColor: WidgetStatePropertyAll(
+                          theme.colorScheme.secondaryContainer,
+                        ),
+                        foregroundColor: WidgetStatePropertyAll(
+                          theme.colorScheme.onSecondaryContainer,
+                        ),
+                      ),
+                      onPressed: () {
+                        context.push('/search');
+                      },
+                      child: Text(t.title.playImages, textAlign: .center),
+                    ),
+                  ),
+                ],
+              ),
+              if (isGamesServicesSupported)
+                ElevatedButton(
+                  style: elevatedButtonStyle,
+                  onPressed: () =>
+                      runAfterGamesSignIn(GamesServices.showAchievements),
+                  child: Text(t.title.achievements),
+                ),
               ElevatedButton(
                 style: elevatedButtonStyle,
                 onPressed: () {
-                  context.push('/play?level=${stows.currentLevel.value}');
+                  context.push('/settings');
                 },
-                child: Padding(
-                  padding: EdgeInsets.all(buttonFontSize / 2),
-                  child: Text(t.title.playLevels),
-                ),
-              ),
-              const SizedBox(height: 16),
-              OpenContainer(
-                tappable: false,
-                closedShape: buttonShape,
-                closedColor: Colors.transparent,
-                closedElevation: 0,
-                openColor: Colors.transparent,
-                openElevation: 0,
-                closedBuilder: (context, action) {
-                  return ElevatedButton(
-                    style: elevatedButtonStyle,
-                    onPressed: action,
-                    child: Padding(
-                      padding: EdgeInsets.all(buttonFontSize / 2),
-                      child: Text(t.title.playImages),
-                    ),
-                  );
-                },
-                openBuilder: (context, action) {
-                  return const SearchPage();
-                },
-              ),
-              if (isGamesServicesSupported) ...[
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  style: elevatedButtonStyle,
-                  onPressed: () => runAfterGamesSignIn(
-                    () => GamesServices.showAchievements(),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(buttonFontSize / 2),
-                    child: Text(t.title.achievements),
-                  ),
-                ),
-              ],
-              const SizedBox(height: 16),
-              OpenContainer(
-                tappable: false,
-                closedShape: buttonShape,
-                closedColor: Colors.transparent,
-                closedElevation: 0,
-                openColor: Colors.transparent,
-                openElevation: 0,
-                closedBuilder: (context, action) {
-                  return ElevatedButton(
-                    style: elevatedButtonStyle,
-                    onPressed: action,
-                    child: Padding(
-                      padding: EdgeInsets.all(buttonFontSize / 2),
-                      child: Text(t.settings.settings),
-                    ),
-                  );
-                },
-                openBuilder: (context, action) {
-                  return const SettingsPage();
-                },
+                child: Text(t.settings.settings),
               ),
             ],
           ),
