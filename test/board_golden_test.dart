@@ -14,6 +14,7 @@ void main() {
           device: GoldenScreenshotDevices.androidPhone.device,
           theme: SuperNonogramTheme.createTheme(
             brightness: Brightness.light,
+            platform: TargetPlatform.android,
           ),
           home: PlayPage(level: level, query: null),
         );

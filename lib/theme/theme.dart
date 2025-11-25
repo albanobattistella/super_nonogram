@@ -1,4 +1,5 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,6 +8,7 @@ import 'package:super_nonogram/data/stows.dart';
 abstract class SuperNonogramTheme {
   static ThemeData createTheme({
     required Brightness brightness,
+    required TargetPlatform platform,
     ColorScheme? colorScheme,
     bool highContrast = false,
   }) {
@@ -14,10 +16,20 @@ abstract class SuperNonogramTheme {
       brightness: brightness,
       highContrast: highContrast,
     );
+    if (platform != TargetPlatform.android &&
+        platform != TargetPlatform.fuchsia) {
+      final plainBackground = brightness == Brightness.light
+          ? Colors.white
+          : Colors.black;
+      colorScheme = colorScheme.copyWith(surface: plainBackground);
+    }
     final textTheme = getTextTheme(stows.hyperlegibleFont.value, colorScheme);
     return ThemeData(
       colorScheme: colorScheme,
       textTheme: textTheme,
+      cupertinoOverrideTheme: NoDefaultCupertinoThemeData(
+        applyThemeToAll: true,
+      ),
       buttonTheme: ButtonThemeData(
         textTheme: ButtonTextTheme.primary,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -68,10 +80,16 @@ abstract class SuperNonogramTheme {
     required Brightness brightness,
     required bool highContrast,
   }) {
-    final scheme = highContrast ? FlexScheme.materialHc : FlexScheme.deepPurple;
-    return brightness == Brightness.light
-        ? FlexColorScheme.light(scheme: scheme).toScheme
-        : FlexColorScheme.dark(scheme: scheme).toScheme;
+    return SeedColorScheme.fromSeeds(
+      brightness: brightness,
+      primaryKey: Colors.deepPurple,
+      secondaryKey: Colors.blue,
+      tertiaryKey: Colors.teal,
+      contrastLevel: highContrast ? 0.7 : 0.0,
+      tones: highContrast
+          ? FlexTones.ultraContrast(brightness)
+          : FlexTones.material(brightness),
+    );
   }
 
   static (TextStyle, TextStyle) _getHeaderAndBodyTextStyles({

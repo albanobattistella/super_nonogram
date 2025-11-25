@@ -87,11 +87,13 @@ class _MyAppState extends State<MyApp> {
           debugShowCheckedModeBanner: false,
           theme: SuperNonogramTheme.createTheme(
             brightness: Brightness.light,
+            platform: defaultTargetPlatform,
             colorScheme: lightDynamic,
             highContrast: highContrast,
           ),
           darkTheme: SuperNonogramTheme.createTheme(
             brightness: Brightness.dark,
+            platform: defaultTargetPlatform,
             colorScheme: darkDynamic,
             highContrast: highContrast,
           ),

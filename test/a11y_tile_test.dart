@@ -46,7 +46,10 @@ class _Showcase extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = SuperNonogramTheme.createTheme(brightness: brightness);
+    final theme = SuperNonogramTheme.createTheme(
+      brightness: brightness,
+      platform: TargetPlatform.android,
+    );
     return Theme(
       data: theme,
       child: ColoredBox(
@@ -69,6 +72,7 @@ class _Showcase extends StatelessWidget {
                         tileState: tileState,
                         colorScheme: SuperNonogramTheme.createTheme(
                           brightness: brightness,
+                          platform: TargetPlatform.android,
                           highContrast: config.highContrast,
                         ).colorScheme,
                         onOffSwitchLabels: config.onOffSwitchLabels,

@@ -42,7 +42,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       ),
                     ),
                     Text(t.settings.hyperlegibleFont),
-                    Switch(
+                    Switch.adaptive(
                       value: stows.hyperlegibleFont.value,
                       onChanged: (_) => setState(() {
                         stows.hyperlegibleFont.value =
