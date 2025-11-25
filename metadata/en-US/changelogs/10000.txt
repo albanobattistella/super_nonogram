@@ -1,0 +1,2 @@
+• Redesigned the title page and various colors used throughout the app
+• Added a high contrast mode for better accessibility

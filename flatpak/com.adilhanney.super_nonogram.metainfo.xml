@@ -87,6 +87,14 @@
     </screenshots>
 
     <releases>
+        <release version="0.10.0" type="development" date="2025-11-25">
+            <description>
+                <ul>
+                    <li>Redesigned the title page and various colors used throughout the app</li>
+                    <li>Added a high contrast mode for better accessibility</li>
+                </ul>
+            </description>
+        </release>
         <release version="0.9.0" type="development" date="2025-11-24">
             <description>
                 <ul>
