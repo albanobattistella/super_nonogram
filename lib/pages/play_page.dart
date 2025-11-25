@@ -214,7 +214,45 @@ class PlayPageState extends State<PlayPage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(t.title.appName),
+          title: Row(
+            children: [
+              Flexible(child: Text('${t.title.appName} ')),
+              Chip(
+                label: Text(
+                  switch (gameMode) {
+                    (LevelGameMode _) => t.gameModes.level,
+                    (ClassicGameMode _) => t.gameModes.classic,
+                    (ImageGameMode _) => t.gameModes.image,
+                  },
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: switch (gameMode) {
+                      (LevelGameMode _) =>
+                        parentTheme.colorScheme.onPrimaryContainer,
+                      (ClassicGameMode _) =>
+                        parentTheme.colorScheme.onSecondaryContainer,
+                      (ImageGameMode _) =>
+                        parentTheme.colorScheme.onTertiaryContainer,
+                    },
+                  ),
+                  textAlign: .center,
+                ),
+                backgroundColor: switch (gameMode) {
+                  (LevelGameMode _) => parentTheme.colorScheme.primaryContainer,
+                  (ClassicGameMode _) =>
+                    parentTheme.colorScheme.secondaryContainer,
+                  (ImageGameMode _) =>
+                    parentTheme.colorScheme.tertiaryContainer,
+                },
+                padding: const .all(6),
+                labelPadding: .zero,
+                side: MediaQuery.highContrastOf(context)
+                    ? null
+                    : BorderSide.none,
+              ),
+            ],
+          ),
+          centerTitle: false,
           // Display level selector
           bottom: gameMode is! LevelGameMode
               ? null

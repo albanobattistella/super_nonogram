@@ -39,6 +39,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final TranslationsSearchEn search = TranslationsSearchEn.internal(_root);
 	late final TranslationsPlayEn play = TranslationsPlayEn.internal(_root);
 	late final TranslationsSettingsEn settings = TranslationsSettingsEn.internal(_root);
+	late final TranslationsGameModesEn gameModes = TranslationsGameModesEn.internal(_root);
 }
 
 // Path: title
@@ -149,4 +150,22 @@ class TranslationsSettingsEn {
 
 	/// en: 'Super Nonogram Copyright (C) 2025 Adil Hanney This program comes with absolutely no warranty. This is free software, and you are welcome to redistribute it under certain conditions.'
 	String get legalese => 'Super Nonogram  Copyright (C) 2025  Adil Hanney\nThis program comes with absolutely no warranty. This is free software, and you are welcome to redistribute it under certain conditions.';
+}
+
+// Path: gameModes
+class TranslationsGameModesEn {
+	TranslationsGameModesEn.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Levels'
+	String get level => 'Levels';
+
+	/// en: 'Classic'
+	String get classic => 'Classic';
+
+	/// en: 'Image'
+	String get image => 'Image';
 }

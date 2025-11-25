@@ -29,5 +29,10 @@
     "hyperlegibleFont": "Use Atkinson Hyperlegible font",
     "about": "Tap here for more information about this app",
     "legalese": "Super Nonogram  Copyright (C) 2025  Adil Hanney\nThis program comes with absolutely no warranty. This is free software, and you are welcome to redistribute it under certain conditions."
+  },
+  "gameModes": {
+    "level": "Levels",
+    "classic": "Classic",
+    "image": "Image"
   }
 }
