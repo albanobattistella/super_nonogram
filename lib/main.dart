@@ -1,4 +1,3 @@
-import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -93,8 +92,6 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     final highContrast = MediaQuery.highContrastOf(context);
-    return DynamicColorBuilder(
-      builder: (lightDynamic, darkDynamic) {
         return MaterialApp.router(
           key: _appKey,
           title: 'Super Nonogram',
@@ -102,18 +99,14 @@ class _MyAppState extends State<MyApp> {
           theme: SuperNonogramTheme.createTheme(
             brightness: Brightness.light,
             platform: defaultTargetPlatform,
-            colorScheme: lightDynamic,
             highContrast: highContrast,
           ),
           darkTheme: SuperNonogramTheme.createTheme(
             brightness: Brightness.dark,
             platform: defaultTargetPlatform,
-            colorScheme: darkDynamic,
             highContrast: highContrast,
           ),
           routerConfig: _router,
         );
-      },
-    );
   }
 }

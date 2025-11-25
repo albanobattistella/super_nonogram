@@ -9,10 +9,9 @@ abstract class SuperNonogramTheme {
   static ThemeData createTheme({
     required Brightness brightness,
     required TargetPlatform platform,
-    ColorScheme? colorScheme,
     bool highContrast = false,
   }) {
-    colorScheme ??= _getDefaultColorScheme(
+    var colorScheme = _getDefaultColorScheme(
       brightness: brightness,
       highContrast: highContrast,
     );
