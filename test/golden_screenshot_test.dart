@@ -13,9 +13,13 @@ import 'package:golden_screenshot/golden_screenshot.dart';
 import 'package:super_nonogram/api/api.dart';
 import 'package:super_nonogram/api/file_manager.dart';
 import 'package:super_nonogram/api/image_to_board.dart';
+import 'package:super_nonogram/board/board.dart';
+import 'package:super_nonogram/board/board_labels.dart';
 import 'package:super_nonogram/board/ngb.dart';
+import 'package:super_nonogram/board/tile_state.dart';
 import 'package:super_nonogram/pages/play_page.dart';
 import 'package:super_nonogram/pages/search_page.dart';
+import 'package:super_nonogram/pages/settings_page.dart';
 import 'package:super_nonogram/pages/title_page.dart';
 import 'package:super_nonogram/theme/theme.dart';
 
@@ -54,6 +58,65 @@ void main() {
         }
       },
     );
+
+    _screenshot('4-level-1', home: PlayPage(query: null, level: 1));
+
+    _screenshot(
+      '5-level-21-incomplete',
+      home: PlayPage(query: null, level: 21),
+      beforeScreenshot: (tester) async {
+        final playPageState = tester.state<PlayPageState>(
+          find.byType(PlayPage),
+        );
+        final boardState = tester.state<BoardWidgetState>(find.byType(Board));
+        for (int y = 0; y < boardState.height; y++) {
+          for (int x = 0; x < boardState.width; x++) {
+            if (x >= boardState.width - 1 && y >= boardState.height - 5) break;
+            final answer = playPageState.answerBoard![y][x].value;
+            if (answer == TileState.selected) {
+              boardState.board[y][x].value = TileState.selected;
+            } else if (answer == TileState.empty) {
+              boardState.board[y][x].value = TileState.crossed;
+            }
+          }
+        }
+        boardState.currentAnswers.value = BoardLabels.fromBoardState(
+          boardState.board,
+          boardState.width,
+          boardState.height,
+        );
+        await tester.pump();
+      },
+    );
+
+    _screenshot(
+      '6-level-21-complete',
+      home: PlayPage(query: null, level: 21),
+      beforeScreenshot: (tester) async {
+        final playPageState = tester.state<PlayPageState>(
+          find.byType(PlayPage),
+        );
+        final boardState = tester.state<BoardWidgetState>(find.byType(Board));
+        for (int y = 0; y < boardState.height; y++) {
+          for (int x = 0; x < boardState.width; x++) {
+            final answer = playPageState.answerBoard![y][x].value;
+            if (answer == TileState.selected) {
+              boardState.board[y][x].value = TileState.selected;
+            } else if (answer == TileState.empty) {
+              boardState.board[y][x].value = TileState.crossed;
+            }
+          }
+        }
+        boardState.currentAnswers.value = BoardLabels.fromBoardState(
+          boardState.board,
+          boardState.width,
+          boardState.height,
+        );
+        await tester.pump();
+      },
+    );
+
+    _screenshot('9-settings', home: SettingsPage());
   });
 }
 
