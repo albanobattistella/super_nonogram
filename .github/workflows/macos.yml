@@ -19,7 +19,7 @@ jobs:
       buildNumber: ${{ steps.get_version.outputs.buildNumber }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Get version
         id: get_version
@@ -43,7 +43,7 @@ jobs:
       APP_STORE_CERTIFICATE_KEY: ${{secrets.APP_STORE_CERTIFICATE_KEY}}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       
       - name: Remove dev dependencies
         run: ./patches/remove_dev_dependencies.sh
@@ -114,7 +114,7 @@ jobs:
           keychain use-login
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: Super-Nonogram-macOS-Archive
           path: build/macos/Build/Products/Release/${{ steps.compress.outputs.zipName }}
