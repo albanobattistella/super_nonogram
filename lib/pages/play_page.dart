@@ -252,7 +252,6 @@ class PlayPageState extends State<PlayPage> {
               ),
             ],
           ),
-          centerTitle: false,
           // Display level selector
           bottom: gameMode is! LevelGameMode
               ? null

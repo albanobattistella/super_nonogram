@@ -40,6 +40,7 @@ abstract class SuperNonogramTheme {
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(textStyle: textTheme.titleLarge),
       ),
+      appBarTheme: AppBarTheme(centerTitle: false),
     );
   }
 
