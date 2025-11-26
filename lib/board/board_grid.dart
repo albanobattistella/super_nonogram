@@ -513,6 +513,7 @@ class UnlabelledBoardGridRenderObject extends RenderBox {
           colorScheme: colorScheme,
           onOffSwitchLabels: onOffSwitchLabels,
           highContrast: highContrast,
+          inCenterOfBoard: _isInCenter(x, width) || _isInCenter(y, height),
         );
       }
     }
@@ -522,5 +523,14 @@ class UnlabelledBoardGridRenderObject extends RenderBox {
   void dispose() {
     _tilesListener?.removeListener(markNeedsPaint);
     super.dispose();
+  }
+
+  bool _isInCenter(int index, int total) {
+    final middle = total ~/ 2;
+    if (total.isOdd) {
+      return index == middle;
+    } else {
+      return index == middle || index == middle - 1;
+    }
   }
 }

@@ -64,21 +64,31 @@ class TilePainter extends CustomPainter {
     required ColorScheme colorScheme,
     required bool onOffSwitchLabels,
     required bool highContrast,
+    bool inCenterOfBoard = false,
   }) {
     final tileRRect = RRect.fromRectXY(
       tileRect,
       tileRect.width * 0.2,
       tileRect.height * 0.2,
     );
+    final tileColorAlpha = switch (tileState) {
+      .selected => 1.0,
+      .crossed => 0.05,
+      .empty => 0.3,
+    };
     canvas.drawRRect(
       tileRRect,
       Paint()
         ..style = PaintingStyle.fill
-        ..color = switch (tileState) {
-          .selected => colorScheme.primary,
-          .crossed => colorScheme.primary.withValues(alpha: 0.05),
-          .empty => colorScheme.primary.withValues(alpha: 0.3),
-        },
+        ..color =
+            (inCenterOfBoard
+                    ? Color.lerp(
+                        colorScheme.primary,
+                        colorScheme.secondaryFixedDim,
+                        0.5,
+                      )!
+                    : colorScheme.primary)
+                .withValues(alpha: tileColorAlpha),
     );
     if (highContrast) {
       canvas.drawRRect(
