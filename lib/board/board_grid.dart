@@ -58,6 +58,7 @@ class BoardGrid extends StatelessWidget {
         child: Stack(
           fit: StackFit.expand,
           children: [
+            if (overlay != null) IgnorePointer(child: overlay!),
             LayoutBuilder(
               builder: (context, constraints) {
                 final gridSize = constraints.biggest;
@@ -78,7 +79,6 @@ class BoardGrid extends StatelessWidget {
                 );
               },
             ),
-            if (overlay != null) IgnorePointer(child: overlay!),
           ],
         ),
       ),
