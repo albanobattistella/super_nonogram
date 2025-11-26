@@ -157,7 +157,6 @@ class LabelledBoardGridRenderObject extends RenderBox
     } else {
       _updateTextPainters();
     }
-    markNeedsLayout();
   }
 
   BoardLabels get currentAnswers => _currentAnswers;
@@ -166,16 +165,16 @@ class LabelledBoardGridRenderObject extends RenderBox
     if (_currentAnswers == currentAnswers) return;
     _currentAnswers = currentAnswers;
     _updateTextPainters(); // Updates color based on correctness
-    markNeedsPaint();
   }
 
   TextStyle get textStyle => _textStyle;
   TextStyle _textStyle;
   set textStyle(TextStyle textStyle) {
     if (_textStyle == textStyle) return;
+    final sizeChanged = _textStyle.fontSize != textStyle.fontSize;
     _textStyle = textStyle;
     _updateTextPainters();
-    markNeedsLayout();
+    if (sizeChanged) markNeedsLayout();
   }
 
   TextDirection get textDirection => _textDirection;
@@ -184,7 +183,6 @@ class LabelledBoardGridRenderObject extends RenderBox
     if (_textDirection == textDirection) return;
     _textDirection = textDirection;
     _updateTextPainters();
-    markNeedsLayout();
   }
 
   List<TextPainter> _columnLabelPainters = const [];
@@ -209,58 +207,73 @@ class LabelledBoardGridRenderObject extends RenderBox
   }
 
   void _generateTextPainters() {
+    // Font sizes are already as big as possible to fit within the tile size.
+    // We use [TextScaler.noScaling] to not scale further.
     _columnLabelPainters = List.generate(
       boardWidth,
-      (_) => TextPainter(),
+      (_) => TextPainter(textAlign: .center, textScaler: .noScaling),
       growable: false,
     );
     _rowLabelPainters = List.generate(
       boardHeight,
-      (_) => TextPainter(),
+      (_) => TextPainter(textAlign: .end, textScaler: .noScaling),
       growable: false,
     );
     _updateTextPainters();
   }
 
+  /// Updates the text and style of all text painters.
+  /// Internally calls [markNeedsLayout] if needed, otherwise [markNeedsPaint].
   void _updateTextPainters() {
+    var changedText = false;
+
     for (var x = 0; x < boardWidth; x++) {
-      _columnLabelPainters[x]
-        ..text = TextSpan(
-          text: answer.labelColumn(x),
-          style: textStyle.copyWith(
-            height: 1.1,
-            color: switch (BoardLabels.statusOfCol(x, answer, currentAnswers)) {
-              .correct => Colors.transparent,
-              .incorrect => Colors.red,
-              .incomplete => null,
-            },
-          ),
-        )
-        ..textDirection = textDirection
-        ..textAlign = TextAlign.center
-        // Font sizes are the biggest possible that fit within the tile size,
-        // so don't scale further.
-        ..textScaler = TextScaler.noScaling;
+      final painter = _columnLabelPainters[x];
+      final newLabel = answer.labelColumn(x);
+      changedText |= (painter.text as TextSpan?)?.text != newLabel;
+      _updateTextPainterExplicitly(
+        painter,
+        newLabel,
+        BoardLabels.statusOfCol(x, answer, currentAnswers),
+      );
     }
     for (var y = 0; y < boardHeight; y++) {
-      _rowLabelPainters[y]
-        ..text = TextSpan(
-          text: answer.labelRow(y),
-          style: textStyle.copyWith(
-            height: 1,
-            color: switch (BoardLabels.statusOfRow(y, answer, currentAnswers)) {
-              .correct => Colors.transparent,
-              .incorrect => Colors.red,
-              .incomplete => null,
-            },
-          ),
-        )
-        ..textDirection = textDirection
-        ..textAlign = TextAlign.end
-        // Font sizes are the biggest possible that fit within the tile size,
-        // so don't scale further.
-        ..textScaler = TextScaler.noScaling;
+      final painter = _rowLabelPainters[y];
+      final newLabel = answer.labelRow(y);
+      changedText |= (painter.text as TextSpan?)?.text != newLabel;
+      _updateTextPainterExplicitly(
+        painter,
+        newLabel,
+        BoardLabels.statusOfRow(y, answer, currentAnswers),
+      );
     }
+
+    if (changedText) {
+      markNeedsLayout();
+    } else {
+      markNeedsPaint();
+    }
+  }
+
+  /// Updates a single text painter's style.
+  /// Call [_updateTextPainters] instead of using this method directly.
+  void _updateTextPainterExplicitly(
+    TextPainter painter,
+    String label,
+    BoardLabelStatus status,
+  ) {
+    painter.text = TextSpan(
+      text: label,
+      style: textStyle.copyWith(
+        height: 1.1,
+        color: switch (status) {
+          .correct => Colors.transparent,
+          .incorrect => Colors.red,
+          .incomplete => null,
+        },
+      ),
+    );
+    painter.textDirection = textDirection;
   }
 
   @override
