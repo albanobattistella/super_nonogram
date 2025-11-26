@@ -209,8 +209,16 @@ class LabelledBoardGridRenderObject extends RenderBox
   }
 
   void _generateTextPainters() {
-    _columnLabelPainters = [for (var x = 0; x < boardWidth; x++) TextPainter()];
-    _rowLabelPainters = [for (var y = 0; y < boardHeight; y++) TextPainter()];
+    _columnLabelPainters = List.generate(
+      boardWidth,
+      (_) => TextPainter(),
+      growable: false,
+    );
+    _rowLabelPainters = List.generate(
+      boardHeight,
+      (_) => TextPainter(),
+      growable: false,
+    );
     _updateTextPainters();
   }
 
