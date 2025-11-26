@@ -3,6 +3,7 @@ import 'package:super_nonogram/data/stows.dart';
 import 'package:super_nonogram/i18n/strings.g.dart';
 import 'package:super_nonogram/settings/animated_app_icon.dart';
 import 'package:super_nonogram/settings/settings_item.dart';
+import 'package:super_nonogram/util/sonic_controller.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -69,8 +70,11 @@ class SettingsPage extends StatelessWidget {
                     builder: (context, child) {
                       return Switch.adaptive(
                         value: stows.useHapticFeedback.value,
-                        onChanged: (_) => stows.useHapticFeedback.value =
-                            !stows.useHapticFeedback.value,
+                        onChanged: (_) {
+                          stows.useHapticFeedback.value =
+                              !stows.useHapticFeedback.value;
+                          SonicController.notifyHapticSettingChanged();
+                        },
                       );
                     },
                   ),
