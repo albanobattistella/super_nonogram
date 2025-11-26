@@ -36,11 +36,22 @@ class BoardGrid extends StatelessWidget {
       child: ValueListenableBuilder(
         valueListenable: currentAnswers,
         builder: (context, currentAnswers, child) {
+          final size = MediaQuery.sizeOf(context);
+          final maxPossibleTileSize = min(
+            size.width / width,
+            // subtract 300 for header and footer
+            max((size.height - 300), 300) / height,
+          );
+          final labelFontSize = min(24.0, maxPossibleTileSize * 0.7);
+
           return _LabelledBoardGridRenderObjectWidget(
             answer: answer,
             currentAnswers: currentAnswers,
             textDirection: Directionality.of(context),
-            textStyle: TextTheme.of(context).bodyLarge!,
+            textStyle: TextTheme.of(context).bodyLarge!.copyWith(
+              fontSize: labelFontSize,
+              letterSpacing: labelFontSize * -0.1,
+            ),
             child: child,
           );
         },
@@ -181,6 +192,7 @@ class LabelledBoardGridRenderObject extends RenderBox
   late double _colLabelHeight;
   late double _rowLabelWidth;
   late double _tileSize;
+  late double _rowLabelSpacing;
 
   int get boardWidth => currentAnswers.columns.length;
   int get boardHeight => currentAnswers.rows.length;
@@ -217,7 +229,10 @@ class LabelledBoardGridRenderObject extends RenderBox
           ),
         )
         ..textDirection = textDirection
-        ..textAlign = TextAlign.center;
+        ..textAlign = TextAlign.center
+        // Font sizes are the biggest possible that fit within the tile size,
+        // so don't scale further.
+        ..textScaler = TextScaler.noScaling;
     }
     for (var y = 0; y < boardHeight; y++) {
       _rowLabelPainters[y]
@@ -233,12 +248,17 @@ class LabelledBoardGridRenderObject extends RenderBox
           ),
         )
         ..textDirection = textDirection
-        ..textAlign = TextAlign.end;
+        ..textAlign = TextAlign.end
+        // Font sizes are the biggest possible that fit within the tile size,
+        // so don't scale further.
+        ..textScaler = TextScaler.noScaling;
     }
   }
 
   @override
   void performLayout() {
+    _rowLabelSpacing = _textStyle.fontSize! * 0.2;
+
     // Find the max width of the row labels
     double maxRowLabelsWidth = 0;
     for (var y = 0; y < _rowLabelPainters.length; y++) {
@@ -246,6 +266,7 @@ class LabelledBoardGridRenderObject extends RenderBox
       painter.layout(maxWidth: constraints.maxWidth * 0.5);
       maxRowLabelsWidth = max(maxRowLabelsWidth, painter.width);
     }
+    maxRowLabelsWidth += _rowLabelSpacing;
     _rowLabelWidth = maxRowLabelsWidth;
 
     // Find the max height of the column labels
@@ -309,7 +330,7 @@ class LabelledBoardGridRenderObject extends RenderBox
       painter.paint(
         context.canvas,
         Offset(
-          offset.dx + (_rowLabelWidth - painter.width),
+          offset.dx + (_rowLabelWidth - _rowLabelSpacing - painter.width),
           offset.dy +
               _colLabelHeight +
               y * _tileSize +

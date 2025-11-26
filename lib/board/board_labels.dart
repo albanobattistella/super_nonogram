@@ -25,7 +25,8 @@ class BoardLabels {
   final List<List<int>> rows;
 
   String labelColumn(int x) => columns[x].join('\n');
-  String labelRow(int y) => rows[y].join(' ');
+  String labelRow(int y) =>
+      rows[y].join('  '); // 2 spaces due to negative letterSpacing
 
   @visibleForTesting
   const BoardLabels.fromLists({required this.columns, required this.rows});
