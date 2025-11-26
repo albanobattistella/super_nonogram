@@ -87,6 +87,15 @@
     </screenshots>
 
     <releases>
+        <release version="0.11.0" type="development" date="2025-11-26">
+            <description>
+                <ul>
+                    <li>Added a "classic" game mode which generates random 9x9 boards.</li>
+                    <li>Increased label sizes so they are easier to read.</li>
+                    <li>Small UI improvements.</li>
+                </ul>
+            </description>
+        </release>
         <release version="0.10.0" type="development" date="2025-11-25">
             <description>
                 <ul>

@@ -1,0 +1,4 @@
+• Added a "classic" game mode which generates random 9x9 boards.
+• Increased label sizes so they are easier to read.
+• Added haptic feedback to the game board.
+• Small UI improvements.
