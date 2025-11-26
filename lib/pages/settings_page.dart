@@ -30,8 +30,14 @@ class SettingsPage extends StatelessWidget {
                     style: textTheme.displaySmall?.copyWith(
                       fontSize: (iconTheme.size ?? 24) * 0.8,
                     ),
+                    softWrap: false,
                   ),
-                  Text(t.settings.hyperlegibleFont),
+                  Text(t.settings.hyperlegibleFont, textAlign: .center),
+                  Text(
+                    t.settings.hyperlegibleFontDescription,
+                    style: textTheme.labelMedium,
+                    textAlign: .center,
+                  ),
                   ListenableBuilder(
                     listenable: stows.hyperlegibleFont,
                     builder: (context, child) {
@@ -39,6 +45,32 @@ class SettingsPage extends StatelessWidget {
                         value: stows.hyperlegibleFont.value,
                         onChanged: (_) => stows.hyperlegibleFont.value =
                             !stows.hyperlegibleFont.value,
+                      );
+                    },
+                  ),
+                ],
+              ),
+              const Divider(),
+
+              // haptic feedback
+              SettingsItem(
+                onTap: () => stows.useHapticFeedback.value =
+                    !stows.useHapticFeedback.value,
+                children: [
+                  Icon(Icons.vibration),
+                  Text(t.settings.useHapticFeedback, textAlign: .center),
+                  Text(
+                    t.settings.useHapticFeedbackDescription,
+                    style: textTheme.labelMedium,
+                    textAlign: .center,
+                  ),
+                  ListenableBuilder(
+                    listenable: stows.useHapticFeedback,
+                    builder: (context, child) {
+                      return Switch.adaptive(
+                        value: stows.useHapticFeedback.value,
+                        onChanged: (_) => stows.useHapticFeedback.value =
+                            !stows.useHapticFeedback.value,
                       );
                     },
                   ),
@@ -56,8 +88,12 @@ class SettingsPage extends StatelessWidget {
                 },
                 children: [
                   const Icon(Icons.info),
-                  Text(t.title.appName),
-                  Text(t.settings.about, style: textTheme.labelMedium),
+                  Text(t.title.appName, textAlign: .center),
+                  Text(
+                    t.settings.about,
+                    style: textTheme.labelMedium,
+                    textAlign: .center,
+                  ),
                 ],
               ),
               const Divider(),

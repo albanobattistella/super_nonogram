@@ -145,6 +145,15 @@ class TranslationsSettingsEn {
 	/// en: 'Use Atkinson Hyperlegible font'
 	String get hyperlegibleFont => 'Use Atkinson Hyperlegible font';
 
+	/// en: 'More readable for people with low vision'
+	String get hyperlegibleFontDescription => 'More readable for people with low vision';
+
+	/// en: 'Use haptic feedback'
+	String get useHapticFeedback => 'Use haptic feedback';
+
+	/// en: 'Vibrate slightly when you interact with the board'
+	String get useHapticFeedbackDescription => 'Vibrate slightly when you interact with the board';
+
 	/// en: 'Tap here for more information about this app'
 	String get about => 'Tap here for more information about this app';
 

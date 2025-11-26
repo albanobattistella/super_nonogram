@@ -27,6 +27,9 @@
   "settings": {
     "settings": "Settings",
     "hyperlegibleFont": "Use Atkinson Hyperlegible font",
+    "hyperlegibleFontDescription": "More readable for people with low vision",
+    "useHapticFeedback": "Use haptic feedback",
+    "useHapticFeedbackDescription": "Vibrate slightly when you interact with the board",
     "about": "Tap here for more information about this app",
     "legalese": "Super Nonogram  Copyright (C) 2025  Adil Hanney\nThis program comes with absolutely no warranty. This is free software, and you are welcome to redistribute it under certain conditions."
   },
