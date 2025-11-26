@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:super_nonogram/board/board_grid.dart';
 import 'package:super_nonogram/board/board_labels.dart';
 import 'package:super_nonogram/board/tile_state.dart';
+import 'package:super_nonogram/util/sonic_controller.dart';
 
 typedef BoardState = List<List<ValueNotifier<TileState>>>;
 typedef Coordinate = ({int x, int y});
@@ -86,6 +87,7 @@ class BoardWidgetState extends State<Board> {
 
     tapHoldTimer?.cancel();
     tapHoldTimer = Timer(const Duration(seconds: 1), () {
+      SonicController.notifyLongPress();
       secondaryInput = true;
       board[y][x].value = TileState.crossed;
       onPanUpdate(coordinate);
@@ -150,18 +152,30 @@ class BoardWidgetState extends State<Board> {
     final backupTileState =
         boardBackup[panStartCoordinate.y][panStartCoordinate.x];
 
+    final bool tileChanged;
     if (backupTileState.value == targetTileState) {
       if (tileState.value == targetTileState) {
         tileState.value = TileState.empty;
+        tileChanged = true;
+      } else {
+        tileChanged = false;
       }
     } else if (backupTileState.value == TileState.empty) {
       if (tileState.value == TileState.empty) {
         tileState.value = targetTileState;
+        tileChanged = true;
+      } else {
+        tileChanged = false;
       }
     } else {
       // we started with a tile that was neither empty nor the target tile state,
       // so just set the tile state indiscriminately
       tileState.value = targetTileState;
+      tileChanged = true;
+    }
+
+    if (tileChanged) {
+      SonicController.notifyTileChange();
     }
   }
 
