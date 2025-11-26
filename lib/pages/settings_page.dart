@@ -4,14 +4,9 @@ import 'package:super_nonogram/i18n/strings.g.dart';
 import 'package:super_nonogram/settings/animated_app_icon.dart';
 import 'package:super_nonogram/settings/settings_item.dart';
 
-class SettingsPage extends StatefulWidget {
+class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
 
-  @override
-  State<SettingsPage> createState() => _SettingsPageState();
-}
-
-class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -27,9 +22,8 @@ class _SettingsPageState extends State<SettingsPage> {
             children: [
               // hyperlegible font
               SettingsItem(
-                onTap: () => setState(() {
-                  stows.hyperlegibleFont.value = !stows.hyperlegibleFont.value;
-                }),
+                onTap: () => stows.hyperlegibleFont.value =
+                    !stows.hyperlegibleFont.value,
                 children: [
                   Text(
                     'Aa',
@@ -38,12 +32,15 @@ class _SettingsPageState extends State<SettingsPage> {
                     ),
                   ),
                   Text(t.settings.hyperlegibleFont),
-                  Switch.adaptive(
-                    value: stows.hyperlegibleFont.value,
-                    onChanged: (_) => setState(() {
-                      stows.hyperlegibleFont.value =
-                          !stows.hyperlegibleFont.value;
-                    }),
+                  ListenableBuilder(
+                    listenable: stows.hyperlegibleFont,
+                    builder: (context, child) {
+                      return Switch.adaptive(
+                        value: stows.hyperlegibleFont.value,
+                        onChanged: (_) => stows.hyperlegibleFont.value =
+                            !stows.hyperlegibleFont.value,
+                      );
+                    },
                   ),
                 ],
               ),
