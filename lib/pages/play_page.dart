@@ -150,7 +150,7 @@ class PlayPageState extends State<PlayPage> {
             Expanded(
               child: Center(
                 child: answerBoard == null
-                    ? const CircularProgressIndicator()
+                    ? const CircularProgressIndicator.adaptive()
                     : Board(
                         answerBoard: answerBoard!,
                         srcImage: imageBytes,
