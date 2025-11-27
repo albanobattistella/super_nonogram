@@ -315,36 +315,34 @@ class PlayPageState extends State<PlayPage> {
     );
   }
 
-  static Future recordLevelCompleteAchievement(int level) async {
+  static Future<void> recordLevelCompleteAchievement(int level) async {
     /// The largest tier that the user has completed
     final completedTier = androidAchievements.levels.tiers.lastWhere(
       (tier) => level >= tier,
     );
-    // Unlock the achievement for the completed tier first
-    // because of a bug on Android where subsequent achievements aren't recorded
-    await runAfterGamesSignIn(
-      () => GamesServices.unlock(
+    await runAfterGamesSignIn(() async {
+      // Unlock the achievement for the completed tier first
+      // because of an Android bug where subsequent achievements aren't recorded
+      await GamesServices.unlock(
         achievement: Achievement(
           androidID: androidAchievements.levels[completedTier],
           iOSID: iosAchievements.levels[completedTier],
           percentComplete: 100,
           steps: completedTier,
         ),
-      ),
-    );
+      );
 
-    for (int tier in androidAchievements.levels.tiers) {
-      if (tier == completedTier) continue;
-      await runAfterGamesSignIn(
-        () => GamesServices.unlock(
+      for (final tier in androidAchievements.levels.tiers) {
+        if (tier == completedTier) continue;
+        await GamesServices.unlock(
           achievement: Achievement(
             androidID: androidAchievements.levels[tier],
             iOSID: iosAchievements.levels[tier],
             percentComplete: min(100, level / tier * 100),
             steps: level,
           ),
-        ),
-      );
-    }
+        );
+      }
+    });
   }
 }
