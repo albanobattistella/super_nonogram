@@ -54,7 +54,7 @@ dependencies:
   games_services: ^4.0.0
 
   url_launcher: ^6.1.12
-  flex_seed_scheme: ^3.0.0
+  flex_seed_scheme: ^4.0.1
 
 dev_dependencies:
   flutter_test:

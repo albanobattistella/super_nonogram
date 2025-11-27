@@ -86,6 +86,7 @@ abstract class SuperNonogramTheme {
       secondaryKey: Colors.blue,
       tertiaryKey: Colors.teal,
       contrastLevel: highContrast ? 0.7 : 0.0,
+      useExpressiveOnContainerColors: !highContrast,
       tones: highContrast
           ? FlexTones.ultraContrast(brightness)
           : FlexTones.material(brightness),
