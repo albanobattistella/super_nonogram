@@ -1,0 +1,4 @@
+• The middle column and row are now highlighted to make counting easier
+• Improved contrast between the game board and the background image, for better visibility
+• Added a privacy policy link to the search page, for more transparency
+• Minor visual tweaks
