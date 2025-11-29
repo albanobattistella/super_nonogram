@@ -137,7 +137,11 @@ class PlayPageState extends State<PlayPage> {
           title: Row(
             children: [
               Flexible(child: Text('${t.title.appName} ')),
-              _GameModeChip(gameMode: gameMode),
+              _GameModeChip(
+                gameMode: gameMode,
+                // keep the same colors as home screen
+                theme: parentTheme,
+              ),
             ],
           ),
           // Display level selector
@@ -246,13 +250,14 @@ class _LevelSelectionBar extends StatelessWidget
 }
 
 class _GameModeChip extends StatelessWidget {
-  const _GameModeChip({required this.gameMode});
+  const _GameModeChip({required this.gameMode, required this.theme});
 
   final GameMode gameMode;
+  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = ColorScheme.of(context);
+    final colorScheme = theme.colorScheme;
     return Chip(
       label: Text(
         switch (gameMode) {
