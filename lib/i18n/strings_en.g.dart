@@ -88,6 +88,13 @@ class TranslationsSearchEn {
 
 	/// en: 'Create'
 	String get create => 'Create';
+
+	/// en: 'Your prompt will be sent to Pixabay, a free image sharing website, to fetch a relevant image. See our ${link(Privacy Policy)} for more information.'
+	TextSpan privacyInformation({required InlineSpanBuilder link}) => TextSpan(children: [
+		const TextSpan(text: 'Your prompt will be sent to Pixabay, a free image sharing website, to fetch a relevant image.\nSee our '),
+		link('Privacy Policy'),
+		const TextSpan(text: ' for more information.'),
+	]);
 }
 
 // Path: play

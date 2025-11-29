@@ -1,11 +1,13 @@
 import 'dart:convert';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:super_nonogram/api/api.dart';
 import 'package:super_nonogram/api/file_manager.dart';
 import 'package:super_nonogram/board/ngb.dart';
 import 'package:super_nonogram/i18n/strings.g.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({
@@ -26,6 +28,11 @@ class _SearchPageState extends State<SearchPage> {
   bool _disableInput = false;
 
   bool _failedSearch = false;
+
+  static final _privacyPolicyUri = Uri.parse(
+    'https://supernonogram.adil.hanney.org/privacy_policy.html',
+  );
+  static const _contentWidth = 600.0;
 
   void _createPuzzle() async {
     if (_disableInput) return;
@@ -76,10 +83,10 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(title: Text(t.title.appName)),
       body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 600),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
+        child: SingleChildScrollView(
+          padding: const .all(16),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: _contentWidth),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -116,6 +123,33 @@ class _SearchPageState extends State<SearchPage> {
                 const SizedBox(height: 32),
                 if (widget.showPreviousPuzzles) const PreviousPuzzles(),
               ],
+            ),
+          ),
+        ),
+      ),
+      bottomNavigationBar: Material(
+        color: colorScheme.surface,
+        child: SafeArea(
+          minimum: const .symmetric(horizontal: 16, vertical: 8),
+          child: SizedBox(
+            width: _contentWidth,
+            child: RichText(
+              textAlign: .center,
+              text: TextSpan(
+                style: textTheme.bodySmall,
+                children: [
+                  t.search.privacyInformation(
+                    link: (text) => TextSpan(
+                      text: text,
+                      style: TextStyle(color: colorScheme.primary),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          launchUrl(_privacyPolicyUri);
+                        },
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

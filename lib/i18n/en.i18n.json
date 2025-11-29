@@ -11,7 +11,8 @@
     "enterPrompt": "Please enter a prompt",
     "prompt": "Prompt",
     "failedToGenerateBoard": "Failed to generate board, please try another prompt",
-    "create": "Create"
+    "create": "Create",
+    "privacyInformation(rich)": "Your prompt will be sent to Pixabay, a free image sharing website, to fetch a relevant image.\nSee our ${link(Privacy Policy)} for more information."
   },
   "play": {
     "level": "Level $n",
