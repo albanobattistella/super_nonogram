@@ -125,10 +125,10 @@ packages:
     dependency: transitive
     description:
       name: ffi
-      sha256: "289279317b4b16eb2bb7e271abccd4bf84ec9bdcbe999e278a94b804f5630418"
+      sha256: d07d37192dbf97461359c1518788f203b0c9102cfd2c35a716b823741219542c
       url: "https://pub.dev"
     source: hosted
-    version: "2.1.4"
+    version: "2.1.5"
   file:
     dependency: transitive
     description:
@@ -177,42 +177,42 @@ packages:
     dependency: "direct main"
     description:
       name: games_services
-      sha256: e968ca9dbca98a4fb0360b93dd00f072b6f018353e45dcb0049659b556c4a87d
+      sha256: "904be03d8afdbb76703bda3bb2b0bf313d08e5099a19bc55b02cde5f658751ff"
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.1"
+    version: "5.0.0"
   games_services_platform_interface:
     dependency: transitive
     description:
       name: games_services_platform_interface
-      sha256: b4e2fd1f26c4e260a76756c8f36d1fef99dd7a3e102b8591a8abfa2a925e974e
+      sha256: e05528712f33d2e6026d9e1c084eccaf03f04549b91f7fd73c2a220db0f30909
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.1"
+    version: "5.0.0"
   go_router:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: c92d18e1fe994cb06d48aa786c46b142a5633067e8297cff6b5a3ac742620104
+      sha256: eff94d2a6fc79fa8b811dde79c7549808c2346037ee107a1121b4a644c745f2a
       url: "https://pub.dev"
     source: hosted
-    version: "17.0.0"
+    version: "17.0.1"
   golden_screenshot:
     dependency: "direct dev"
     description:
       name: golden_screenshot
-      sha256: "4e56399d43000fad8db1992c0482cc192aa88a2bad76d4a16f09f1e0086781dd"
+      sha256: "2f7807322939ea921c593376c3d5f7c7b4b72e6c7bd8df927caff2b0d5f1d19a"
       url: "https://pub.dev"
     source: hosted
-    version: "8.1.1"
+    version: "9.1.2"
   google_fonts:
     dependency: "direct main"
     description:
       name: google_fonts
-      sha256: "517b20870220c48752eafa0ba1a797a092fb22df0d89535fd9991e86ee2cdd9c"
+      sha256: eefe5ee217f331627d8bbcf01f91b21c730bf66e225d6dc8a148370b0819168d
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.2"
+    version: "7.0.0"
   gsettings:
     dependency: transitive
     description:
@@ -257,10 +257,10 @@ packages:
     dependency: "direct main"
     description:
       name: image
-      sha256: "4e973fcf4caae1a4be2fa0a13157aa38a8f9cb049db6529aa00b4d71abc4d928"
+      sha256: "492bd52f6c4fbb6ee41f781ff27765ce5f627910e1e0cbecfa3d9add5562604c"
       url: "https://pub.dev"
     source: hosted
-    version: "4.5.4"
+    version: "4.7.2"
   intl:
     dependency: transitive
     description:
@@ -505,18 +505,18 @@ packages:
     dependency: "direct main"
     description:
       name: shared_preferences
-      sha256: "6e8bf70b7fef813df4e9a36f658ac46d107db4b4cfe1048b477d4e453a8159f5"
+      sha256: "2939ae520c9024cb197fc20dee269cd8cdbf564c8b5746374ec6cacdc5169e64"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.3"
+    version: "2.5.4"
   shared_preferences_android:
     dependency: transitive
     description:
       name: shared_preferences_android
-      sha256: "46a46fd64659eff15f4638bbe19de43f9483f0e0bf024a9fb6b3582064bacc7b"
+      sha256: "83af5c682796c0f7719c2bbf74792d113e40ae97981b8f266fa84574573556bc"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.17"
+    version: "2.4.18"
   shared_preferences_foundation:
     dependency: transitive
     description:
@@ -566,10 +566,10 @@ packages:
     dependency: "direct main"
     description:
       name: slang
-      sha256: "8f5ae507de811e245b7a3187d3191e9eefe7d8f2c22f150663f15bb0f1559367"
+      sha256: e97bbb72af7882e4f714b90a8a07f787ed2e5b6c901a1e2b7f73c11772247fa9
       url: "https://pub.dev"
     source: hosted
-    version: "4.11.0"
+    version: "4.11.2"
   slang_flutter:
     dependency: "direct main"
     description:
@@ -750,10 +750,10 @@ packages:
     dependency: transitive
     description:
       name: watcher
-      sha256: "592ab6e2892f67760543fb712ff0177f4ec76c031f02f5b4ff8d3fc5eb9fb61a"
+      sha256: "1398c9f081a753f9226febe8900fce8f7d0a67163334e1c94a2438339d79d635"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.4"
+    version: "1.2.1"
   web:
     dependency: transitive
     description:
