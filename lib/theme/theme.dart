@@ -22,7 +22,11 @@ abstract class SuperNonogramTheme {
           : Colors.black;
       colorScheme = colorScheme.copyWith(surface: plainBackground);
     }
-    final textTheme = getTextTheme(stows.hyperlegibleFont.value, colorScheme);
+    final textTheme = getTextTheme(
+      platform,
+      colorScheme,
+      stows.hyperlegibleFont.value,
+    );
     return ThemeData(
       colorScheme: colorScheme,
       textTheme: textTheme,
@@ -43,9 +47,13 @@ abstract class SuperNonogramTheme {
     );
   }
 
-  static TextTheme getTextTheme(bool useHyperlegible, ColorScheme colorScheme) {
+  static TextTheme getTextTheme(
+    TargetPlatform platform,
+    ColorScheme colorScheme,
+    bool useHyperlegible,
+  ) {
     final typography = Typography.material2021(
-      platform: defaultTargetPlatform,
+      platform: platform,
       colorScheme: colorScheme,
     );
     final base = colorScheme.brightness == Brightness.dark
