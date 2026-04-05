@@ -87,6 +87,13 @@
     </screenshots>
 
     <releases>
+        <release version="0.12.0" type="development" date="2026-04-05">
+            <description>
+                <ul>
+                    <li>Maintenance update: No functional changes</li>
+                </ul>
+            </description>
+        </release>
         <release version="0.11.1" type="development" date="2025-11-29">
             <description>
                 <ul>
