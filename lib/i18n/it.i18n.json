@@ -1,0 +1,42 @@
+{
+  "title": {
+    "appName": "Super Nonogram",
+    "playLevels": "Gioca\nlivelli",
+    "playImages": "Gioca\nimmagini",
+    "playClassic": "Gioca\nclassico",
+    "achievements": "Obiettivi"
+  },
+  "search": {
+    "createNewPuzzle": "Crea un puzzle",
+    "enterPrompt": "Inserisci un prompt",
+    "prompt": "Prompt",
+    "failedToGenerateBoard": "Generazione griglia fallita, prova un altro prompt",
+    "create": "Crea",
+    "privacyInformation(rich)": "Il tuo prompt verrà inviato a Pixabay, un sito di condivisione immagini gratuito, per recuperare un'immagine pertinente.\nConsulta la nostra ${link(Privacy Policy)} per maggiori informazioni."
+  },
+  "play": {
+    "level": "Livello $n",
+    "levelCompleted": "Livello $n completato!",
+    "puzzleCompleted": "Puzzle completato!",
+    "nextLevel": "Livello successivo",
+    "restartLevel": "Ricomincia livello",
+    "restartPuzzle": "Ricomincia puzzle",
+    "playAgain": "Gioca ancora",
+    "backToTitlePage": "Torna al menu",
+    "imageAttribution(rich)": "Immagine di $author da $pixabay"
+  },
+  "settings": {
+    "settings": "Impostazioni",
+    "hyperlegibleFont": "Usa font Atkinson Hyperlegible",
+    "hyperlegibleFontDescription": "Più leggibile per persone con vista ridotta",
+    "useHapticFeedback": "Usa feedback aptico",
+    "useHapticFeedbackDescription": "Vibra leggermente quando tocchi la griglia",
+    "about": "Tocca qui per maggiori informazioni sull'app",
+    "legalese": "Super Nonogram  Copyright (C) 2025  Adil Hanney\nQuesto programma viene fornito assolutamente senza garanzia. Questo è software libero, e sei il benvenuto a ridistribuirlo sotto determinate condizioni."
+  },
+  "gameModes": {
+    "level": "Livelli",
+    "classic": "Classico",
+    "image": "Immagine"
+  }
+}
